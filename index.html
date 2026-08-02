@@ -10,48 +10,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        /* মডার্ন কালার & ডিজাইন */
         :root { --bg: #eef2f6; --white: #ffffff; --primary: #1d4ed8; --text: #1e293b; --subtext: #64748b; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Hind Siliguri', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
         .container { max-width: 1100px; margin: 0 auto; }
-
         .header { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 16px 24px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; }
         .brand h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .brand small { font-size: 13px; font-weight: 400; color: var(--subtext); display: block; }
-        
         .status { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 50px; }
         .status.online { background: #dcfce7; color: #166534; }
         .status.offline { background: #fee2e2; color: #991b1b; }
         .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .status.online .dot { background: #22c55e; }
         .status.offline .dot { background: #ef4444; }
-
         .filter-area { background: var(--white); padding: 16px 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 20px; }
         .grid-select { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-
         .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 13px; font-weight: 600; color: var(--subtext); }
         .form-group select { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; font-family: inherit; cursor: pointer; outline: none; transition: 0.2s; }
         .form-group select:focus { border-color: var(--primary); background: white; }
         .form-group select:disabled { opacity: 0.5; cursor: not-allowed; }
-
         .content { background: var(--white); padding: 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); min-height: 200px; }
-        
         .gender-selection { display: none; text-align: center; margin-bottom: 16px; }
         .gender-selection.active { display: block; }
         .gender-select { max-width: 250px; margin: 0 auto; }
-
         .toolbar { display: none; background: #f8fafc; padding: 10px 16px; border-radius: 10px; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
         .toolbar.active { display: flex; }
         .search-box { flex: 1; display: flex; align-items: center; background: white; padding: 4px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .search-box input { border: none; outline: none; background: transparent; width: 100%; padding: 6px 0; font-family: inherit; }
         .count-box { background: white; padding: 6px 16px; border-radius: 50px; font-weight: 600; font-size: 14px; }
-
         .grid-voter { display: grid; grid-template-columns: 1fr; gap: 14px; }
         @media (min-width: 600px) { .grid-voter { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 900px) { .grid-voter { grid-template-columns: repeat(3, 1fr); } }
-
         .voter-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; transition: 0.2s; }
         .voter-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .card-title { display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 10px; }
@@ -62,12 +52,10 @@
         .detail.full { grid-column: 1 / -1; }
         .detail span { font-size: 12px; color: var(--subtext); font-weight: 600; }
         .detail p { font-weight: 500; margin-top: 2px; }
-
         .loader { display: none; }
         .loader.active { display: flex; flex-direction: column; gap: 12px; }
         .loader-item { height: 60px; background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; border-radius: 8px; animation: anim-load 1.2s infinite; }
         @keyframes anim-load { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
         .empty { text-align: center; padding: 40px 20px; color: var(--subtext); }
         .empty i { font-size: 40px; color: #cbd5e1; margin-bottom: 10px; display: block; }
     </style>
@@ -118,7 +106,7 @@
 </div>
 
 <script>
-    // 🔥 এখানে শুধু আপনার Render লিংক বসান
+    // 🔥 আপনার Render সার্ভার লিংক
     const API_BASE = 'https://bangladesh-api-cl87.onrender.com';
 
     // DOM এলিমেন্টস
@@ -140,13 +128,11 @@
         vil: document.getElementById('vilSelect')
     };
 
-    // স্টেট ম্যানেজমেন্ট
     let state = {
         popPaths: { male: null, female: null },
         allVoters: []
     };
 
-    // হেল্পার
     function setStat(txt, type) {
         statusText.textContent = txt;
         status.className = 'status ' + type;
@@ -171,19 +157,15 @@
         countBox.textContent = 'মোট: ০ জন';
     }
 
-    // স্মার্ট API কল
     async function apiFetch(endpoint) {
         try {
             const res = await fetch(`${API_BASE}${endpoint.startsWith('/') ? endpoint : '/'+endpoint}`);
             if (!res.ok) throw new Error("Net Error");
             const json = await res.json();
             return json.success ? json.data : null;
-        } catch(e) {
-            return null;
-        }
+        } catch(e) { return null; }
     }
 
-    // সিলেক্ট ড্রপডাউন পপুলেট
     async function populate(s, folder, parent, placeholder) {
         let url = `/api/geo/${folder}`;
         if (parent) url += `/${parent}`;
@@ -196,7 +178,6 @@
         return false;
     }
 
-    // --- সিলেক্ট চেইন লজিক ---
     async function loadDivisions() {
         setStat('Connecting...', 'offline');
         if(await populate(select.div, 'divisions', null, 'বিভাগ নির্বাচন করুন')) setStat('Online ✅', 'online');
@@ -238,7 +219,6 @@
         resetUI();
     }
 
-    // --- গ্রাম সিলেক্ট করলে পপুলেশন পাথ বসবে ---
     async function loadVillagePaths() {
         const id = select.vil.value;
         if(!id) { resetUI(); return; }
@@ -257,14 +237,13 @@
         }
     }
 
-    // --- জেন্ডার সিলেক্ট করলে ভোটার লোড (ভুল পাথ ফিক্স) ---
     genderSelect.addEventListener('change', async function() {
         const gender = this.value;
         const path = state.popPaths[gender];
         if(!gender || !path) return;
 
         showLoader(true);
-        // 🔥 স্মার্ট পাথ এক্সট্রাক্টর: পাথ যাই থাকুক, শুধু ফাইলের নাম (ID) নিবে
+        // ফাইলের নাম (ID) বের করা
         const fileId = path.replace(/^.*[\/\\]/, '').replace('.json', '');
         const data = await apiFetch(`/api/population/${gender}/${fileId}`);
         showLoader(false);
@@ -280,7 +259,6 @@
         }
     });
 
-    // --- রেন্ডার ও সার্চ ---
     function renderVoters(list) {
         if(!list || list.length === 0) {
             voterGrid.innerHTML = `<div class="empty"><i class="fas fa-user-slash"></i><h3>ভোটার খালি</h3></div>`;
@@ -318,14 +296,12 @@
         renderVoters(filtered);
     });
 
-    // ইভেন্ট লিসেনার
     select.div.addEventListener('change', loadDistricts);
     select.dist.addEventListener('change', loadUpazilas);
     select.upa.addEventListener('change', loadUnions);
     select.uni.addEventListener('change', loadVillages);
     select.vil.addEventListener('change', loadVillagePaths);
 
-    // অ্যাপ স্টার্ট
     loadDivisions();
 </script>
 </body>
