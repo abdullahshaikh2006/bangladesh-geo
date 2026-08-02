@@ -1,419 +1,192 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>Bangladesh Voter List</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>বাংলাদেশ ভোটার তালিকা</title>
     
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
     <style>
-        /* ===== CSS রিসেট ও বেসিক ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background: #f1f5f9;
-            color: #1e293b;
-            padding: 15px;
+            background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
             min-height: 100vh;
+            padding: 20px;
         }
-
-        .app-container {
+        .container {
             max-width: 1000px;
             margin: 0 auto;
             background: #ffffff;
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            padding: 20px 24px;
-            position: relative;
-            overflow: hidden;
+            padding: 24px 30px;
         }
 
-        /* ===== হেডার (মোবাইলের জন্য কমপ্যাক্ট) ===== */
-        .app-header {
+        /* Header */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 15px;
             border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 16px;
             margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 10px;
-        }
-        .app-header .brand {
-            display: flex;
-            align-items: center;
             gap: 12px;
         }
-        .app-header .brand .flag {
-            font-size: 30px;
-            line-height: 1;
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand h1 { font-size: 24px; font-weight: 700; color: #0f172a; }
+        .brand h1 small { font-size: 13px; font-weight: 400; color: #64748b; display: block; }
+        
+        .status-badge {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 18px; border-radius: 50px; font-size: 14px; font-weight: 600;
+            background: #e2e8f0; color: #475569; transition: 0.3s;
         }
-        .app-header .brand h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-        .app-header .brand h1 small {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            color: #64748b;
-            margin-top: -2px;
-        }
+        .status-badge.online { background: #dcfce7; color: #166534; }
+        .status-badge.offline { background: #fee2e2; color: #991b1b; }
+        .status-badge.loading { background: #fef9c3; color: #854d0e; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #64748b; display: inline-block; }
+        .status-badge.online .dot { background: #22c55e; }
+        .status-badge.offline .dot { background: #ef4444; }
+        .status-badge.loading .dot { animation: pulse-dot 1s infinite; }
 
-        /* ===== স্ট্যাটাস ব্যাজ ===== */
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            background: #e2e8f0;
-            color: #475569;
-            transition: all 0.3s ease;
-        }
-        .status-pill .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #64748b;
-            display: inline-block;
-        }
-        .status-pill.online { background: #dcfce7; color: #166534; }
-        .status-pill.online .dot { background: #22c55e; }
-        .status-pill.loading { background: #fef9c3; color: #854d0e; }
-        .status-pill.loading .dot { background: #eab308; animation: pulse-dot 1s infinite; }
-        .status-pill.offline { background: #fee2e2; color: #991b1b; }
-        .status-pill.offline .dot { background: #ef4444; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        /* ===== ফর্ম সিলেক্টর (মোবাইলের জন্য বড় ট্যাপ এরিয়া) ===== */
+        /* Selectors */
         .selector-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px; margin-bottom: 20px;
         }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 13px; font-weight: 600; color: #475569; }
         .form-group select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: #f8fafc;
-            font-size: 15px;
-            font-family: 'Hind Siliguri', sans-serif;
-            color: #0f172a;
-            transition: all 0.2s ease;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            cursor: pointer;
+            padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px;
+            background: #f8fafc; font-size: 15px; font-family: inherit;
+            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center;
+            cursor: pointer; transition: all 0.2s;
         }
-        .form-group select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        .form-group select:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background-color: #f1f5f9;
-        }
+        .form-group select:focus { border-color: #3b82f6; background: #fff; outline: none; }
+        .form-group select:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* ===== লোডিং স্কেলেটন ===== */
-        .skeleton-loader {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            padding: 20px 0;
-        }
+        /* Loading Skeleton */
+        .skeleton-loader { display: none; flex-direction: column; gap: 15px; padding: 20px 0; }
         .skeleton-loader.active { display: flex; }
         .skeleton-item {
-            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-            background-size: 200% 100%;
-            border-radius: 12px;
-            height: 80px;
-            animation: shimmer 1.5s infinite;
+            height: 80px; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%; border-radius: 12px; animation: shimmer 1.5s infinite;
         }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* ===== জেন্ডার নির্বাচন ===== */
-        .gender-section {
-            display: none;
-            margin-top: 20px;
-            padding-top: 18px;
-            border-top: 2px dashed #e2e8f0;
-        }
-        .gender-section.active { display: block; }
-        .gender-select-wrapper {
-            max-width: 300px;
-            margin: 0 auto;
-        }
+        /* Gender */
+        .gender-box { display: none; padding: 20px 0; border-top: 2px dashed #e2e8f0; margin-top: 15px; }
+        .gender-box.active { display: block; }
 
-        /* ===== মেটা ডেটা কার্ড ===== */
-        .meta-box {
-            display: none;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            padding: 16px 20px;
-            border-radius: 16px;
-            margin-top: 16px;
-            border-left: 6px solid #3b82f6;
+        /* Meta Info */
+        .meta-card {
+            display: none; background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            padding: 16px 20px; border-radius: 14px; margin-top: 20px; border-left: 6px solid #3b82f6;
         }
-        .meta-box.active { display: block; }
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        .meta-item {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(4px);
-            padding: 8px 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .meta-item .label { font-size: 11px; color: #475569; font-weight: 500; }
-        .meta-item .value { font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+        .meta-card.active { display: block; }
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .meta-item { background: rgba(255,255,255,0.7); padding: 8px 12px; border-radius: 8px; text-align: center; }
+        .meta-label { font-size: 12px; color: #64748b; font-weight: 500; }
+        .meta-value { font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 2px; }
 
-        /* ===== ফিল্টার বার ===== */
-        .filter-bar {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            margin: 18px 0 15px;
-            flex-wrap: wrap;
-        }
+        /* Filter & Search */
+        .filter-bar { display: none; align-items: center; gap: 12px; margin: 20px 0 15px; flex-wrap: wrap; }
         .filter-bar.active { display: flex; }
-        .search-wrap {
-            flex: 1;
-            min-width: 150px;
-            display: flex;
-            align-items: center;
-            background: #f8fafc;
-            padding: 10px 16px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
-            transition: 0.2s;
+        .search-box {
+            flex: 1; min-width: 180px; display: flex; align-items: center;
+            background: #f8fafc; padding: 8px 16px; border-radius: 12px;
+            border: 2px solid #e2e8f0; transition: 0.2s;
         }
-        .search-wrap:focus-within { border-color: #3b82f6; background: #fff; }
-        .search-wrap i { color: #94a3b8; margin-right: 10px; }
-        .search-wrap input {
+        .search-box:focus-within { border-color: #3b82f6; background: #fff; }
+        .search-box input {
             border: none; background: transparent; outline: none;
-            width: 100%; font-size: 15px; font-family: 'Hind Siliguri';
+            width: 100%; font-size: 15px; font-family: inherit;
         }
-        .voter-count-badge {
-            background: #e2e8f0;
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #0f172a;
-            white-space: nowrap;
+        .voter-count {
+            background: #e2e8f0; padding: 6px 18px; border-radius: 50px;
+            font-weight: 600; font-size: 14px; color: #0f172a; white-space: nowrap;
         }
 
-        /* ===== ভোটার কার্ড গ্রিড (মোবাইল ফার্স্ট) ===== */
+        /* Voter Cards Grid */
         .voter-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-top: 5px;
+            display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 10px;
         }
-        @media (min-width: 600px) {
-            .voter-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 900px) {
-            .voter-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        @media (min-width: 600px) { .voter-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px) { .voter-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .voter-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            position: relative;
-            overflow: hidden;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 16px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02); position: relative;
         }
-        .voter-card:hover, .voter-card:active {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-            border-color: #bfdbfe;
-        }
-        
-        /* কার্ডের উপর সুন্দর গ্রেডিয়েন্ট বর্ডার */
+        .voter-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-color: #bfdbfe; }
         .voter-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            opacity: 0; transition: opacity 0.3s ease;
         }
         .voter-card:hover::before { opacity: 1; }
 
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 10px;
-            margin-bottom: 12px;
-        }
-        .card-name { font-size: 18px; font-weight: 700; color: #0f172a; line-height: 1.2; }
-        .card-serial {
-            background: #3b82f6;
-            color: #fff;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
+        .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }
+        .voter-name { font-size: 17px; font-weight: 700; color: #0f172a; }
+        .voter-serial { background: #3b82f6; color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        
+        .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 14px; color: #1e293b; }
+        .detail { display: flex; flex-direction: column; }
+        .detail .label { font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .detail .value { font-weight: 500; word-break: break-word; margin-top: 2px; }
+        .detail.full-width { grid-column: 1 / -1; }
 
-        .card-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            font-size: 14px;
-        }
-        .card-detail {
-            display: flex;
-            flex-direction: column;
-        }
-        .card-detail .d-label {
-            font-size: 11px;
-            color: #94a3b8;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .card-detail .d-value {
-            font-weight: 500;
-            color: #1e293b;
-            word-break: break-word;
-        }
-        .card-detail.full-width { grid-column: 1 / -1; }
-
-        /* ===== এম্পটি স্টেট ===== */
         .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px 20px;
+            grid-column: 1 / -1; text-align: center; padding: 50px 20px;
             color: #94a3b8;
         }
-        .empty-state i { font-size: 50px; margin-bottom: 15px; color: #cbd5e1; }
-        .empty-state h3 { font-size: 18px; color: #475569; margin-bottom: 5px; }
+        .empty-state i { font-size: 48px; color: #cbd5e1; margin-bottom: 15px; display: block; }
 
-        /* ===== ফুটার ===== */
-        .app-footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 13px;
-            color: #94a3b8;
-        }
-
-        /* ===== স্ক্রোল বার (মোবাইলের জন্য মসৃণ) ===== */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* ===== মোবাইলের জন্য অতিরিক্ত অপ্টিমাইজেশন ===== */
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-            .app-container { padding: 16px; border-radius: 16px; }
-            .app-header .brand h1 { font-size: 18px; }
-            .status-pill { padding: 4px 12px; font-size: 12px; }
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .brand h1 { font-size: 20px; }
             .selector-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .form-group select { padding: 10px; font-size: 14px; }
-            .voter-card { padding: 14px; }
-            .card-name { font-size: 16px; }
+            .voter-card { padding: 12px; }
         }
     </style>
 </head>
 <body>
-
-<div class="app-container">
-    <!-- হেডার -->
-    <header class="app-header">
+<div class="container">
+    <div class="header">
         <div class="brand">
-            <span class="flag">🇧🇩</span>
+            <span style="font-size: 32px;">🇧🇩</span>
             <h1>ভোটার তালিকা <small>Bangladesh Voter API</small></h1>
         </div>
-        <div class="status-pill" id="statusBadge">
-            <span class="dot"></span> <span id="statusText">সংযোগ হচ্ছে...</span>
+        <div class="status-badge" id="statusBadge">
+            <span class="dot"></span> <span id="statusText">লোড হচ্ছে...</span>
         </div>
-    </header>
+    </div>
 
-    <!-- সিলেক্টর গ্রিড -->
     <div class="selector-grid">
-        <div class="form-group">
-            <label><i class="fas fa-map-marker-alt"></i> বিভাগ</label>
-            <select id="divisionSelect"><option value="">লোড হচ্ছে...</option></select>
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-city"></i> জেলা</label>
-            <select id="districtSelect" disabled><option value="">প্রথমে বিভাগ বেছে নিন</option></select>
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-layer-group"></i> উপজেলা</label>
-            <select id="upazilaSelect" disabled><option value="">প্রথমে জেলা বেছে নিন</option></select>
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-people-arrows"></i> ইউনিয়ন</label>
-            <select id="unionSelect" disabled><option value="">প্রথমে উপজেলা বেছে নিন</option></select>
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-home"></i> গ্রাম</label>
-            <select id="villageSelect" disabled><option value="">প্রথমে ইউনিয়ন বেছে নিন</option></select>
-        </div>
+        <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> বিভাগ</label><select id="divisionSelect"><option value="">লোড হচ্ছে...</option></select></div>
+        <div class="form-group"><label><i class="fas fa-city"></i> জেলা</label><select id="districtSelect" disabled><option value="">প্রথমে বিভাগ নির্বাচন করুন</option></select></div>
+        <div class="form-group"><label><i class="fas fa-layer-group"></i> উপজেলা</label><select id="upazilaSelect" disabled><option value="">প্রথমে জেলা নির্বাচন করুন</option></select></div>
+        <div class="form-group"><label><i class="fas fa-people-arrows"></i> ইউনিয়ন</label><select id="unionSelect" disabled><option value="">প্রথমে উপজেলা নির্বাচন করুন</option></select></div>
+        <div class="form-group"><label><i class="fas fa-home"></i> গ্রাম</label><select id="villageSelect" disabled><option value="">প্রথমে ইউনিয়ন নির্বাচন করুন</option></select></div>
     </div>
 
-    <!-- লোডিং স্কেলেটন -->
     <div class="skeleton-loader" id="skeletonLoader">
-        <div class="skeleton-item"></div>
-        <div class="skeleton-item"></div>
-        <div class="skeleton-item"></div>
-        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div><div class="skeleton-item"></div>
+        <div class="skeleton-item"></div><div class="skeleton-item"></div>
     </div>
 
-    <!-- জেন্ডার সিলেক্ট -->
-    <div class="gender-section" id="genderSection">
-        <div class="gender-select-wrapper form-group">
+    <div class="gender-box" id="genderBox">
+        <div class="form-group" style="max-width: 300px; margin: 0 auto;">
             <label><i class="fas fa-venus-mars"></i> লিঙ্গ নির্বাচন করুন</label>
             <select id="genderSelect">
                 <option value="">-- নির্বাচন করুন --</option>
@@ -423,276 +196,252 @@
         </div>
     </div>
 
-    <!-- মেটা ইনফো -->
-    <div class="meta-box" id="metaBox">
-        <div class="meta-grid" id="metaGrid"></div>
-    </div>
+    <div class="meta-card" id="metaCard"><div class="meta-grid" id="metaGrid"></div></div>
 
-    <!-- ফিল্টার ও সার্চ -->
     <div class="filter-bar" id="filterBar">
-        <div class="search-wrap">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="নাম বা আইডি দিয়ে খুঁজুন..." />
-        </div>
-        <div class="voter-count-badge" id="voterCount">মোট: ০ জন</div>
+        <div class="search-box"><i class="fas fa-search" style="color: #94a3b8; margin-right: 10px;"></i><input type="text" id="searchInput" placeholder="নাম বা ভোটার আইডি দিয়ে খুঁজুন..." /></div>
+        <div class="voter-count" id="voterCount">মোট: ০ জন</div>
     </div>
 
-    <!-- ভোটার কার্ড গ্রিড -->
     <div class="voter-grid" id="voterGrid"></div>
-
-    <div class="app-footer">
-        &copy; 2026 বাংলাদেশ লোকেশন এপিআই | ভোটার তথ্য
-    </div>
 </div>
 
 <script>
-    // ================================================================
-    //  কনফিগারেশন ও স্টেট
-    // ================================================================
-    const API_BASE = 'https://bangladesh-api-cl87.onrender.com'; // আপনার লোকাল সার্ভার পোর্ট
-    let state = { currentVillageId: null, voterList: [], fileUrls: { male: null, female: null } };
+    // 🔥 আপনার সার্ভারের সঠিক লিংক
+    const API_BASE = 'https://bangladesh-api-cl87.onrender.com/api';
 
-    // ================================================================
-    //  DOM রেফারেন্স
-    // ================================================================
-    const dom = {
-        status: document.getElementById('statusBadge'),
-        statusText: document.getElementById('statusText'),
-        skeleton: document.getElementById('skeletonLoader'),
-        div: document.getElementById('divisionSelect'),
-        dist: document.getElementById('districtSelect'),
-        upa: document.getElementById('upazilaSelect'),
-        uni: document.getElementById('unionSelect'),
-        vil: document.getElementById('villageSelect'),
-        genderSec: document.getElementById('genderSection'),
-        gender: document.getElementById('genderSelect'),
-        meta: document.getElementById('metaBox'),
-        metaGrid: document.getElementById('metaGrid'),
-        filter: document.getElementById('filterBar'),
-        search: document.getElementById('searchInput'),
-        count: document.getElementById('voterCount'),
-        grid: document.getElementById('voterGrid')
+    // DOM এলিমেন্ট
+    const statusBadge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+    const skeletonLoader = document.getElementById('skeletonLoader');
+    
+    const divisionSelect = document.getElementById('divisionSelect');
+    const districtSelect = document.getElementById('districtSelect');
+    const upazilaSelect = document.getElementById('upazilaSelect');
+    const unionSelect = document.getElementById('unionSelect');
+    const villageSelect = document.getElementById('villageSelect');
+    
+    const genderBox = document.getElementById('genderBox');
+    const genderSelect = document.getElementById('genderSelect');
+    const metaCard = document.getElementById('metaCard');
+    const metaGrid = document.getElementById('metaGrid');
+    const filterBar = document.getElementById('filterBar');
+    const searchInput = document.getElementById('searchInput');
+    const voterCount = document.getElementById('voterCount');
+    const voterGrid = document.getElementById('voterGrid');
+
+    // স্টেট
+    let state = {
+        currentVillageId: null,
+        fileUrls: { male: null, female: null },
+        voterList: [],
+        filteredVoters: []
     };
 
-    // ================================================================
-    //  ইউটিলিটি ফাংশন
-    // ================================================================
-    const setStatus = (text, type) => {
-        dom.statusText.textContent = text;
-        dom.status.className = 'status-pill';
-        if(type === 'online') dom.status.classList.add('online');
-        else if(type === 'loading') dom.status.classList.add('loading');
-        else if(type === 'offline') dom.status.classList.add('offline');
-    };
+    // হেল্পার
+    function setStatus(label, type = 'online') {
+        statusText.textContent = label;
+        statusBadge.className = 'status-badge';
+        if (type === 'online') statusBadge.classList.add('online');
+        else if (type === 'offline') statusBadge.classList.add('offline');
+        else if (type === 'loading') statusBadge.classList.add('loading');
+    }
 
-    const showSkeleton = (show) => dom.skeleton.classList.toggle('active', show);
+    function showLoader(show) {
+        skeletonLoader.classList.toggle('active', show);
+    }
 
-    const resetSelect = (sel, msg) => {
-        sel.innerHTML = `<option value="">${msg}</option>`;
-        sel.disabled = true;
-    };
+    function clearSelect(select, placeholder) {
+        select.innerHTML = `<option value="">${placeholder}</option>`;
+        select.disabled = true;
+    }
 
-    const populateSelect = (sel, items, msg) => {
-        sel.innerHTML = `<option value="">${msg}</option>`;
-        items.forEach(i => {
-            sel.innerHTML += `<option value="${i.id}">${i.name || i.bn_name}</option>`;
+    function populateSelect(select, items, placeholder) {
+        select.innerHTML = `<option value="">${placeholder}</option>`;
+        items.forEach(item => {
+            select.innerHTML += `<option value="${item.id}">${item.name || item.bn_name}</option>`;
         });
-        sel.disabled = false;
-    };
+        select.disabled = false;
+    }
 
-    const clearVoterUI = () => {
-        dom.genderSec.classList.remove('active');
-        dom.meta.classList.remove('active');
-        dom.filter.classList.remove('active');
-        dom.grid.innerHTML = '';
-        dom.count.textContent = 'মোট: ০ জন';
-        state.voterList = [];
-        state.fileUrls = { male: null, female: null };
-    };
-
-    // ================================================================
-    //  এপিআই ফেচ ফাংশন (সুপার ক্লিন)
-    // ================================================================
-    const apiFetch = async (url) => {
+    // API কল
+    async function apiFetch(endpoint) {
         try {
-            const res = await fetch(url);
-            if(!res.ok) throw new Error(`HTTP ${res.status}`);
+            const res = await fetch(`${API_BASE}${endpoint}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
             return json.success ? json.data : null;
         } catch (err) {
             console.error('API Error:', err);
             return null;
         }
-    };
-
-    // ================================================================
-    //  ডেটা লোডিং লজিক (লেজি চেইন)
-    // ================================================================
-    async function loadDivisions() {
-        setStatus('লোড হচ্ছে...', 'loading');
-        const data = await apiFetch(`${API_BASE}/divisions`);
-        if(data) { populateSelect(dom.div, data, 'বিভাগ বেছে নিন'); setStatus('সার্ভার সংযুক্ত ✅', 'online'); }
-        else { setStatus('অফলাইন ❌', 'offline'); dom.div.innerHTML = `<option value="">সংযোগ ব্যর্থ</option>`; }
     }
 
+    // ১. বিভাগ লোড
+    async function loadDivisions() {
+        setStatus('লোড হচ্ছে...', 'loading');
+        const data = await apiFetch('/divisions');
+        if (data && data.length > 0) {
+            populateSelect(divisionSelect, data, 'বিভাগ নির্বাচন করুন');
+            setStatus('অনলাইন ✅', 'online');
+        } else {
+            setStatus('অফলাইন ❌', 'offline');
+            divisionSelect.innerHTML = `<option value="">সার্ভার সংযোগ নেই</option>`;
+        }
+    }
+
+    // ২. জেলা, উপজেলা, ইউনিয়ন, গ্রাম লোড চেইন
     async function loadDistricts(id) {
-        resetSelect(dom.dist, 'প্রথমে বিভাগ বেছে নিন');
-        resetSelect(dom.upa, 'প্রথমে জেলা বেছে নিন');
-        resetSelect(dom.uni, 'প্রথমে উপজেলা বেছে নিন');
-        resetSelect(dom.vil, 'প্রথমে ইউনিয়ন বেছে নিন');
-        clearVoterUI();
-        if(!id) return;
-        const data = await apiFetch(`${API_BASE}/divisions/${id}`);
-        if(data) populateSelect(dom.dist, data.districts || [], 'জেলা বেছে নিন');
+        if (!id) { clearSelect(districtSelect, 'প্রথমে বিভাগ নির্বাচন করুন'); resetUI(); return; }
+        const data = await apiFetch(`/divisions/${id}`);
+        if (data) populateSelect(districtSelect, data.districts || [], 'জেলা নির্বাচন করুন');
+        clearSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন');
+        clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
+        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        resetUI();
     }
 
     async function loadUpazilas(id) {
-        resetSelect(dom.upa, 'প্রথমে জেলা বেছে নিন');
-        resetSelect(dom.uni, 'প্রথমে উপজেলা বেছে নিন');
-        resetSelect(dom.vil, 'প্রথমে ইউনিয়ন বেছে নিন');
-        clearVoterUI();
-        if(!id) return;
-        const data = await apiFetch(`${API_BASE}/districts/${id}`);
-        if(data) populateSelect(dom.upa, data.upazilas || [], 'উপজেলা বেছে নিন');
+        if (!id) { clearSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন'); resetUI(); return; }
+        const data = await apiFetch(`/districts/${id}`);
+        if (data) populateSelect(upazilaSelect, data.upazilas || [], 'উপজেলা নির্বাচন করুন');
+        clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
+        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        resetUI();
     }
 
     async function loadUnions(id) {
-        resetSelect(dom.uni, 'প্রথমে উপজেলা বেছে নিন');
-        resetSelect(dom.vil, 'প্রথমে ইউনিয়ন বেছে নিন');
-        clearVoterUI();
-        if(!id) return;
-        const data = await apiFetch(`${API_BASE}/upazilas/${id}`);
-        if(data) populateSelect(dom.uni, data.unions || [], 'ইউনিয়ন বেছে নিন');
+        if (!id) { clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন'); resetUI(); return; }
+        const data = await apiFetch(`/upazilas/${id}`);
+        if (data) populateSelect(unionSelect, data.unions || [], 'ইউনিয়ন নির্বাচন করুন');
+        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        resetUI();
     }
 
     async function loadVillages(id) {
-        resetSelect(dom.vil, 'প্রথমে ইউনিয়ন বেছে নিন');
-        clearVoterUI();
-        if(!id) return;
-        const data = await apiFetch(`${API_BASE}/unions/${id}`);
-        if(data) populateSelect(dom.vil, data.villages || [], 'গ্রাম বেছে নিন');
+        if (!id) { clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন'); resetUI(); return; }
+        const data = await apiFetch(`/unions/${id}`);
+        if (data) populateSelect(villageSelect, data.villages || [], 'গ্রাম নির্বাচন করুন');
+        resetUI();
     }
 
+    // ৩. গ্রামের বিস্তারিত (Population ফাইলের লিংক পেতে)
     async function loadVillageDetails(id) {
-        clearVoterUI();
-        if(!id) return;
-        showSkeleton(true);
-        const data = await apiFetch(`${API_BASE}/villages/${id}`);
-        showSkeleton(false);
-        if(data && data.population_files) {
+        resetUI();
+        if (!id) return;
+        
+        showLoader(true);
+        const data = await apiFetch(`/villages/${id}`);
+        showLoader(false);
+
+        if (data && data.population_files) {
             state.fileUrls = data.population_files;
-            dom.genderSec.classList.add('active');
+            genderBox.classList.add('active');
+            genderSelect.value = '';
         } else {
-            dom.grid.innerHTML = `<div class="empty-state"><i class="fas fa-database"></i><h3>ডেটা পাওয়া যায়নি</h3><p>এই গ্রামের জন্য ভোটার ফাইল লোড করা সম্ভব হয়নি।</p></div>`;
+            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-database"></i><h3>ডেটা পাওয়া যায়নি</h3><p>এই গ্রামের জন্য ভোটার তালিকা পাওয়া যায়নি।</p></div>`;
         }
     }
 
-    // ================================================================
-    //  পপুলেশন ডেটা লোড (পুরুষ/মহিলা)
-    // ================================================================
-    dom.gender.addEventListener('change', async function() {
+    function resetUI() {
+        genderBox.classList.remove('active');
+        metaCard.classList.remove('active');
+        filterBar.classList.remove('active');
+        voterGrid.innerHTML = '';
+        voterCount.textContent = 'মোট: ০ জন';
+        state.voterList = [];
+        state.fileUrls = { male: null, female: null };
+        genderSelect.value = '';
+    }
+
+    // ৪. জেন্ডার সিলেক্ট করলে ভোটার ডেটা লোড হবে
+    genderSelect.addEventListener('change', async function() {
         const gender = this.value;
-        if(!gender || !state.fileUrls[gender]) return;
+        if (!gender || !state.fileUrls[gender]) return;
 
-        showSkeleton(true);
-        dom.meta.classList.remove('active');
-        dom.filter.classList.remove('active');
-        dom.grid.innerHTML = '';
-
+        showLoader(true);
+        // সার্ভার থেকে সরাসরি JSON ফাইল লোড হবে
         const data = await apiFetch(state.fileUrls[gender]);
-        showSkeleton(false);
+        showLoader(false);
 
-        if(data) {
+        if (data) {
             state.voterList = data.voters || [];
-            renderVoterUI(data);
+            renderUI(data);
         } else {
-            dom.grid.innerHTML = `<div class="empty-state"><i class="fas fa-user-slash"></i><h3>ডেটা পাওয়া যায়নি!</h3><p>এই লিঙ্গের ভোটার তালিকা খুঁজে পাওয়া যায়নি। ফাইলটি সঠিক পাথে আছে কিনা নিশ্চিত করুন।</p></div>`;
+            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><h3>ভোটার পাওয়া যায়নি!</h3><p>এই লিঙ্গের জন্য ফাইলটি খুঁজে পাওয়া যায়নি।</p></div>`;
+            metaCard.classList.remove('active');
+            filterBar.classList.remove('active');
         }
     });
 
-    // ================================================================
-    //  রেন্ডার ফাংশন (মেটা + কার্ড)
-    // ================================================================
-    function renderVoterUI(data) {
+    // ৫. রেন্ডার ফাংশন (মেটা + কার্ড)
+    function renderUI(data) {
         // মেটা ডেটা
-        if(data.meta) {
-            dom.meta.classList.add('active');
-            dom.metaGrid.innerHTML = '';
-            const fields = ['district', 'sub_district', 'union', 'ward_number', 'total_male_voters'];
-            fields.forEach(f => {
-                if(data.meta[f]) {
-                    dom.metaGrid.innerHTML += `
-                        <div class="meta-item">
-                            <div class="label">${f.replace(/_/g, ' ').toUpperCase()}</div>
-                            <div class="value">${data.meta[f]}</div>
-                        </div>
-                    `;
-                }
-            });
+        if (data.meta) {
+            metaCard.classList.add('active');
+            metaGrid.innerHTML = `
+                <div class="meta-item"><div class="meta-label">জেলা</div><div class="meta-value">${data.meta.district || '—'}</div></div>
+                <div class="meta-item"><div class="meta-label">উপজেলা</div><div class="meta-value">${data.meta.sub_district || '—'}</div></div>
+                <div class="meta-item"><div class="meta-label">ইউনিয়ন</div><div class="meta-value">${data.meta.union || '—'}</div></div>
+                <div class="meta-item"><div class="meta-label">মোট ভোটার</div><div class="meta-value">${data.meta.total_male_voters || data.meta.total_female_voters || data.voters.length || 0} জন</div></div>
+            `;
         }
 
-        // ফিল্টার ও গ্রিড
-        dom.filter.classList.add('active');
-        dom.search.value = '';
+        filterBar.classList.add('active');
+        searchInput.value = '';
         renderGrid(state.voterList);
     }
 
     function renderGrid(list) {
-        if(!list || list.length === 0) {
-            dom.grid.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><h3>কোনো ভোটার নেই</h3></div>`;
-            dom.count.textContent = 'মোট: ০ জন';
+        if (!list || list.length === 0) {
+            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-user-slash"></i><h3>কোনো ভোটার নেই</h3></div>`;
+            voterCount.textContent = 'মোট: ০ জন';
             return;
         }
 
         let html = '';
-        list.forEach((v, i) => {
+        list.forEach(voter => {
             html += `
                 <div class="voter-card">
-                    <div class="card-top">
-                        <div class="card-name">${v.name || '—'}</div>
-                        <span class="card-serial">#${v.serial || i+1}</span>
+                    <div class="card-header">
+                        <div class="voter-name">${voter.name || '—'}</div>
+                        <div class="voter-serial">#${voter.serial || '—'}</div>
                     </div>
                     <div class="card-body">
-                        <div class="card-detail"><span class="d-label"><i class="far fa-id-card"></i> আইডি</span><span class="d-value">${v.voter_id || '—'}</span></div>
-                        <div class="card-detail"><span class="d-label"><i class="fas fa-male"></i> পিতা</span><span class="d-value">${v.father || '—'}</span></div>
-                        <div class="card-detail"><span class="d-label"><i class="fas fa-female"></i> মাতা</span><span class="d-value">${v.mother || '—'}</span></div>
-                        <div class="card-detail"><span class="d-label"><i class="fas fa-calendar-alt"></i> জন্ম</span><span class="d-value">${v.date_of_birth || '—'}</span></div>
-                        <div class="card-detail full-width"><span class="d-label"><i class="fas fa-briefcase"></i> পেশা</span><span class="d-value">${v.occupation || '—'}</span></div>
-                        <div class="card-detail full-width"><span class="d-label"><i class="fas fa-map-pin"></i> ঠিকানা</span><span class="d-value">${v.address || '—'}</span></div>
+                        <div class="detail"><div class="label"><i class="far fa-id-card"></i> আইডি</div><div class="value">${voter.voter_id || '—'}</div></div>
+                        <div class="detail"><div class="label"><i class="fas fa-male"></i> পিতা</div><div class="value">${voter.father || '—'}</div></div>
+                        <div class="detail"><div class="label"><i class="fas fa-female"></i> মাতা</div><div class="value">${voter.mother || '—'}</div></div>
+                        <div class="detail"><div class="label"><i class="fas fa-calendar-alt"></i> জন্ম তারিখ</div><div class="value">${voter.date_of_birth || '—'}</div></div>
+                        <div class="detail full-width"><div class="label"><i class="fas fa-briefcase"></i> পেশা</div><div class="value">${voter.occupation || '—'}</div></div>
+                        <div class="detail full-width"><div class="label"><i class="fas fa-map-pin"></i> ঠিকানা</div><div class="value">${voter.address || '—'}</div></div>
                     </div>
                 </div>
             `;
         });
-        dom.grid.innerHTML = html;
-        dom.count.textContent = `মোট: ${list.length} জন`;
+        voterGrid.innerHTML = html;
+        voterCount.textContent = `মোট: ${list.length} জন`;
     }
 
-    // ================================================================
-    //  সার্চ/ফিল্টার (ক্লায়েন্ট সাইড)
-    // ================================================================
-    dom.search.addEventListener('input', function() {
-        const q = this.value.trim().toLowerCase();
-        if(!q) { renderGrid(state.voterList); return; }
+    // ৬. সার্চ
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        if (!query) { renderGrid(state.voterList); return; }
+        
         const filtered = state.voterList.filter(v => 
-            (v.name || '').toLowerCase().includes(q) || 
-            (v.voter_id || '').toLowerCase().includes(q) ||
-            (v.father || '').toLowerCase().includes(q)
+            (v.name || '').toLowerCase().includes(query) || 
+            (v.voter_id || '').toLowerCase().includes(query)
         );
         renderGrid(filtered);
     });
 
-    // ================================================================
-    //  ইভেন্ট লিসেনার (ড্রপডাউন চেইন)
-    // ================================================================
-    dom.div.onchange = (e) => { loadDistricts(e.target.value); dom.dist.value = ''; dom.upa.value = ''; dom.uni.value = ''; dom.vil.value = ''; };
-    dom.dist.onchange = (e) => { loadUpazilas(e.target.value); dom.upa.value = ''; dom.uni.value = ''; dom.vil.value = ''; };
-    dom.upa.onchange = (e) => { loadUnions(e.target.value); dom.uni.value = ''; dom.vil.value = ''; };
-    dom.uni.onchange = (e) => { loadVillages(e.target.value); dom.vil.value = ''; };
-    dom.vil.onchange = (e) => { loadVillageDetails(e.target.value); };
+    // ইভেন্ট লিসেনার
+    divisionSelect.addEventListener('change', function() { loadDistricts(this.value); });
+    districtSelect.addEventListener('change', function() { loadUpazilas(this.value); });
+    upazilaSelect.addEventListener('change', function() { loadUnions(this.value); });
+    unionSelect.addEventListener('change', function() { loadVillages(this.value); });
+    villageSelect.addEventListener('change', function() { loadVillageDetails(this.value); });
 
-    // ================================================================
-    //  অ্যাপ স্টার্ট
-    // ================================================================
+    // অ্যাপ স্টার্ট
     loadDivisions();
 </script>
 </body>
