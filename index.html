@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল সার্চ ইঞ্জিন</title>
+    <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল প্ল্যাটফর্ম</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,129 +11,192 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <style>
+        /* ===== থিম ভেরিয়েবল (লাইট ও ডার্ক) ===== */
+        :root {
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --meta-bg: rgba(239, 246, 255, 0.8);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --highlight: #fef08a;
+            --highlight-text: #0f172a;
+            --btn-primary: #3b82f6;
+            --btn-primary-hover: #2563eb;
+            --input-bg: #ffffff;
+            --loader-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --meta-bg: rgba(30, 41, 59, 0.9);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.5);
+            --highlight: #a16207;
+            --highlight-text: #fef08a;
+            --btn-primary: #3b82f6;
+            --btn-primary-hover: #60a5fa;
+            --input-bg: #1e293b;
+            --loader-color: #60a5fa;
+        }
+
         /* ===== রিসেট ও বেসিক ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Hind Siliguri', 'Inter', sans-serif; background: #f8fafc; min-height: 100vh; padding: 0; overflow-x: hidden; width: 100%; max-width: 100vw; color: #0f172a; }
+        body { font-family: 'Hind Siliguri', 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0; overflow-x: hidden; width: 100%; max-width: 100vw; transition: background 0.3s, color 0.3s; }
         
         .app-container { max-width: 1200px; margin: 0 auto; padding: 16px 16px 80px 16px; width: 100%; }
 
         /* ===== হেডার ===== */
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 16px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; gap: 10px; transition: border-color 0.3s; }
         .header-left { display: flex; align-items: center; gap: 12px; }
         .header-left .flag { font-size: 32px; line-height: 1; }
-        .header-left h1 { font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.2; letter-spacing: -0.5px; }
-        .header-left h1 small { display: block; font-size: 12px; font-weight: 400; color: #64748b; }
+        .header-left h1 { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.2; letter-spacing: -0.5px; transition: color 0.3s; }
+        .header-left h1 small { display: block; font-size: 12px; font-weight: 400; color: var(--text-light); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        
+        .theme-toggle { background: var(--card-bg); border: 1px solid var(--border); border-radius: 30px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; color: var(--text); transition: all 0.3s; box-shadow: var(--shadow); }
+        .theme-toggle:active { transform: scale(0.95); }
+        .theme-toggle:hover { border-color: var(--btn-primary); }
+
+        .accessibility-btn { background: var(--card-bg); border: 1px solid var(--border); border-radius: 30px; padding: 8px 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); transition: all 0.3s; font-family: inherit; box-shadow: var(--shadow); }
+        .accessibility-btn:active { transform: scale(0.95); }
+
         .status-badge { background: #10b981; color: #fff; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2); transition: all 0.3s ease; }
         .status-badge i { font-size: 10px; }
-        .status-badge.offline { background: #ef4444; }
-        .status-badge.loading { background: #f59e0b; color: #0f172a; }
+        .status-badge.offline { background: #ef4444; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2); }
+        .status-badge.loading { background: #f59e0b; color: #0f172a; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2); }
+
+        /* ===== ব্রেডক্রাম্ব ===== */
+        .breadcrumb { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 13px; color: var(--text-light); margin-bottom: 16px; padding: 8px 12px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); transition: all 0.3s; }
+        .breadcrumb span { color: var(--text); font-weight: 500; }
+        .breadcrumb i { font-size: 10px; color: var(--text-light); }
+        .breadcrumb .crumb-link { color: var(--btn-primary); cursor: pointer; font-weight: 500; text-decoration: none; }
+        .breadcrumb .crumb-link:hover { text-decoration: underline; }
 
         /* ===== সিলেক্টর ===== */
         .selector-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         @media (min-width: 640px) { .selector-group { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
-        .selector-group select { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 14px; font-size: 14px; font-family: 'Hind Siliguri', sans-serif; background: #ffffff; color: #0f172a; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
-        .selector-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
-        .selector-group select:disabled { background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; opacity: 0.8; }
+        .selector-group select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 14px; font-size: 14px; font-family: inherit; background: var(--input-bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
+        .selector-group select:focus { outline: none; border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .selector-group select:disabled { background-color: var(--bg); color: var(--text-light); cursor: not-allowed; opacity: 0.8; }
 
         /* ===== লোডিং ===== */
         .loading-spinner { display: none; text-align: center; padding: 40px 0; }
         .loading-spinner.active { display: block; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--loader-color); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; transition: border-color 0.3s; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-spinner p { color: #64748b; font-size: 14px; }
+        .loading-spinner p { color: var(--text-light); font-size: 14px; }
 
         /* ===== জেন্ডার ===== */
-        .gender-select-group { display: none; margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0; animation: fadeUp 0.4s ease; }
+        .gender-select-group { display: none; margin-top: 20px; padding-top: 20px; border-top: 2px dashed var(--border); animation: fadeUp 0.4s ease; transition: border-color 0.3s; }
         .gender-select-group.active { display: block; }
-        .gender-select-group select { width: 100%; max-width: 400px; margin: 0 auto; display: block; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 16px; font-size: 16px; font-family: 'Hind Siliguri', sans-serif; background: #fff; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; transition: all 0.2s; cursor: pointer; }
-        .gender-select-group select:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .gender-select-group select { width: 100%; max-width: 400px; margin: 0 auto; display: block; padding: 14px 16px; border: 2px solid var(--border); border-radius: 16px; font-size: 16px; font-family: inherit; background: var(--input-bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; transition: all 0.2s; cursor: pointer; }
+        .gender-select-group select:focus { border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
 
         /* ===== মেটা কার্ড ===== */
-        .meta-card { display: none; background: rgba(239, 246, 255, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; padding: 16px 20px; margin-top: 16px; border: 1px solid rgba(59, 130, 246, 0.2); border-left: 6px solid #3b82f6; animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .meta-card { display: none; background: var(--meta-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; padding: 16px 20px; margin-top: 16px; border: 1px solid rgba(59, 130, 246, 0.2); border-left: 6px solid var(--btn-primary); animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1); transition: background 0.3s, border-color 0.3s; }
         .meta-card.active { display: block; }
         .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         @media (min-width: 640px) { .meta-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } }
-        .meta-item { background: #ffffff; padding: 8px 12px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-        .meta-item .meta-label { font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .meta-item .meta-value { font-size: 15px; font-weight: 600; color: #0f172a; margin-top: 2px; }
+        .meta-item { background: var(--card-bg); padding: 8px 12px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: background 0.3s, color 0.3s; }
+        .meta-item .meta-label { font-size: 11px; color: var(--text-light); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .meta-item .meta-value { font-size: 15px; font-weight: 600; color: var(--text); margin-top: 2px; }
         .meta-item.full-width { grid-column: 1 / -1; }
 
-        /* ===== সার্চ ফিল্টার (হাইলাইট ইঞ্জিন) ===== */
+        /* ===== এক্সপোর্ট অল বাটন ===== */
+        .export-section { display: none; justify-content: flex-end; margin-top: 12px; animation: fadeUp 0.4s ease; }
+        .export-section.active { display: flex; }
+        .export-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-family: inherit; box-shadow: var(--shadow); }
+        .export-btn:active { transform: scale(0.95); }
+        .export-btn:hover { border-color: var(--btn-primary); }
+
+        /* ===== সার্চ ফিল্টার ===== */
         .filter-section { display: none; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease; }
-        .filter-section .search-wrapper { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: #fff; padding: 4px 4px 4px 16px; border-radius: 30px; border: 1.5px solid #e2e8f0; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .filter-section .search-wrapper:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
-        .filter-section .search-wrapper i { color: #94a3b8; font-size: 14px; }
-        .filter-section .search-wrapper input { border: none; background: transparent; outline: none; font-size: 15px; font-family: 'Hind Siliguri', sans-serif; width: 100%; padding: 10px 10px 10px 0; color: #0f172a; }
-        .filter-section .search-wrapper input::placeholder { color: #94a3b8; }
-        .filter-section .voter-count { font-size: 14px; font-weight: 600; color: #0f172a; background: #f1f5f9; padding: 8px 18px; border-radius: 30px; white-space: nowrap; }
+        .filter-section .search-wrapper { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 4px 4px 4px 16px; border-radius: 30px; border: 1.5px solid var(--border); transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .filter-section .search-wrapper:focus-within { border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .filter-section .search-wrapper i { color: var(--text-light); font-size: 14px; }
+        .filter-section .search-wrapper input { border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; width: 100%; padding: 10px 10px 10px 0; color: var(--text); }
+        .filter-section .search-wrapper input::placeholder { color: var(--text-light); }
+        .filter-section .voter-count { font-size: 14px; font-weight: 600; color: var(--text); background: var(--card-bg); padding: 8px 18px; border-radius: 30px; white-space: nowrap; border: 1px solid var(--border); transition: all 0.3s; }
 
         /* ===== ভোটার গ্রিড ===== */
         .voter-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
         @media (min-width: 600px) { .voter-grid { grid-template-columns: 1fr 1fr; } }
         @media (min-width: 900px) { .voter-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
-        /* ===== প্রফেশনাল ভোটার কার্ড ===== */
-        .voter-card { background: #ffffff; border-radius: 24px; padding: 20px 18px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid rgba(226, 232, 240, 0.8); transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); animation: fadeUp 0.6s ease backwards; position: relative; display: flex; flex-direction: column; }
-        .voter-card:active { transform: scale(0.98); background: #f8fafc; }
-        @media (hover: hover) { .voter-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #93c5fd; } }
+        /* ===== প্রফেশনাল ভোটার কার্ড (হোভার এনিমেশন সহ) ===== */
+        .voter-card { background: var(--card-bg); border-radius: 24px; padding: 20px 18px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); animation: fadeUp 0.6s ease backwards; position: relative; display: flex; flex-direction: column; overflow: hidden; }
+        .voter-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(59,130,246,0.05), transparent); transition: left 0.6s; pointer-events: none; }
+        .voter-card:hover::before { left: 100%; }
+        .voter-card:active { transform: scale(0.98); }
+        
+        @media (hover: hover) {
+            .voter-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: var(--shadow-hover); border-color: var(--btn-primary); }
+        }
 
-        .voter-card .voter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
-        .voter-card .voter-header .voter-name { font-size: 18px; font-weight: 700; color: #0f172a; line-height: 1.3; letter-spacing: -0.3px; }
-        .voter-card .voter-header .voter-serial { background: #3b82f6; color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; height: fit-content; }
+        .voter-card .voter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid var(--border); padding-bottom: 12px; transition: border-color 0.3s; }
+        .voter-card .voter-header .voter-name { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.3; letter-spacing: -0.3px; }
+        .voter-card .voter-header .voter-serial { background: var(--btn-primary); color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; height: fit-content; }
         
         .voter-card .voter-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; flex-grow: 1; }
-        .voter-card .voter-body .detail { font-size: 14px; color: #334155; }
-        .voter-card .voter-body .detail .label { font-weight: 500; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .voter-card .voter-body .detail .value { font-weight: 600; color: #0f172a; margin-top: 2px; word-break: break-word; }
+        .voter-card .voter-body .detail { font-size: 14px; color: var(--text); }
+        .voter-card .voter-body .detail .label { font-weight: 500; color: var(--text-light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .voter-card .voter-body .detail .value { font-weight: 600; color: var(--text); margin-top: 2px; word-break: break-word; }
         .voter-card .voter-body .detail.full-width { grid-column: 1 / -1; }
 
-        /* ===== সার্চ হাইলাইট ইফেক্ট ===== */
-        .highlight { background-color: #fef08a; padding: 0 2px; border-radius: 4px; font-weight: 700; color: #0f172a; }
+        /* ===== সার্চ হাইলাইট ===== */
+        .highlight { background-color: var(--highlight); color: var(--highlight-text); padding: 0 2px; border-radius: 4px; font-weight: 700; transition: all 0.3s; }
 
-        /* ===== কার্ড অ্যাকশন বাটন ===== */
-        .voter-card .card-actions { display: flex; gap: 10px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 14px; justify-content: flex-end; }
-        .voter-card .card-actions button { background: #ffffff; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 30px; font-size: 14px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Hind Siliguri', sans-serif; flex: 1; min-height: 44px; touch-action: manipulation; }
-        .voter-card .card-actions button:active { background: #f1f5f9; transform: scale(0.95); }
+        /* ===== কার্ড অ্যাকশন ===== */
+        .voter-card .card-actions { display: flex; gap: 10px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; justify-content: flex-end; transition: border-color 0.3s; }
+        .voter-card .card-actions button { background: var(--card-bg); border: 1px solid var(--border); padding: 10px 16px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; flex: 1; min-height: 44px; touch-action: manipulation; }
+        .voter-card .card-actions button:active { background: var(--bg); transform: scale(0.95); }
         .voter-card .card-actions button i { font-size: 15px; }
+        .voter-card .card-actions button:hover { border-color: var(--btn-primary); color: var(--btn-primary); }
 
-        /* ===== লোড মোর ===== */
-        .load-more-container { text-align: center; margin-top: 24px; padding: 10px; display: none; }
-        .load-more-btn { padding: 14px 40px; background: #3b82f6; color: #fff; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); touch-action: manipulation; min-height: 48px; }
-        .load-more-btn:active { transform: scale(0.95); }
-        .load-more-btn:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; }
+        /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল ===== */
+        .sentinel { height: 20px; width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
+        .sentinel .loading-dots { font-size: 20px; color: var(--btn-primary); display: none; }
 
         /* ===== মডাল (বটম শীট) ===== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: flex-end; justify-content: center; animation: fadeIn 0.3s ease; }
         @media (min-width: 600px) { .modal-overlay { align-items: center; } }
         .modal-overlay.active { display: flex; }
 
-        .modal-box { background: #ffffff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 24px 20px 20px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        .modal-box { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 24px 20px 20px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); transition: background 0.3s, color 0.3s; }
         @media (min-width: 600px) { .modal-box { border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); animation: scaleUp 0.3s cubic-bezier(0.22, 1, 0.36, 1); } }
 
-        .modal-box .modal-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 16px auto; display: block; }
+        .modal-box .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 10px; margin: 0 auto 16px auto; display: block; transition: background 0.3s; }
         @media (min-width: 600px) { .modal-box .modal-handle { display: none; } }
 
-        .modal-box h3 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .modal-box h3 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
 
         .modal-box .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-        .modal-box .modal-options label { display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s; font-size: 15px; color: #334155; font-weight: 500; }
-        .modal-box .modal-options label:active { background: #eff6ff; border-color: #3b82f6; }
-        .modal-box .modal-options input[type="checkbox"] { width: 20px; height: 20px; accent-color: #3b82f6; cursor: pointer; flex-shrink: 0; }
+        .modal-box .modal-options label { display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: var(--bg); border-radius: 14px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; font-size: 15px; color: var(--text); font-weight: 500; }
+        .modal-box .modal-options label:active { background: var(--bg); border-color: var(--btn-primary); }
+        .modal-box .modal-options input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--btn-primary); cursor: pointer; flex-shrink: 0; }
 
         .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .download-grid button { padding: 14px 8px; border: 1.5px solid #e2e8f0; border-radius: 14px; background: #f8fafc; cursor: pointer; font-size: 13px; font-weight: 600; color: #1e293b; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Hind Siliguri', sans-serif; min-height: 48px; touch-action: manipulation; }
-        .download-grid button:active { background: #eff6ff; border-color: #3b82f6; transform: scale(0.95); }
-        .download-grid button i { font-size: 16px; color: #3b82f6; }
+        .download-grid button { padding: 14px 8px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; min-height: 48px; touch-action: manipulation; }
+        .download-grid button:active { background: var(--bg); border-color: var(--btn-primary); transform: scale(0.95); }
+        .download-grid button i { font-size: 16px; color: var(--btn-primary); }
 
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
-        .modal-actions button { padding: 10px 24px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: 'Hind Siliguri', sans-serif; min-height: 44px; touch-action: manipulation; }
-        .modal-actions .btn-cancel { background: #f1f5f9; color: #475569; }
-        .modal-actions .btn-cancel:active { background: #e2e8f0; }
-        .modal-actions .btn-primary { background: #3b82f6; color: #fff; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
+        .modal-actions button { padding: 10px 24px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; min-height: 44px; touch-action: manipulation; }
+        .modal-actions .btn-cancel { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .modal-actions .btn-cancel:active { background: var(--bg); }
+        .modal-actions .btn-primary { background: var(--btn-primary); color: #fff; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
         .modal-actions .btn-primary:active { transform: scale(0.95); }
 
         /* ===== টোস্ট ===== */
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 14px 24px; border-radius: 40px; font-size: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; display: none; align-items: center; gap: 10px; animation: slideUp 0.4s ease; font-family: 'Hind Siliguri', sans-serif; width: calc(100% - 40px); max-width: 400px; justify-content: center; text-align: center; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 40px; font-size: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; display: none; align-items: center; gap: 10px; animation: slideUp 0.4s ease; font-family: inherit; width: calc(100% - 40px); max-width: 400px; justify-content: center; text-align: center; }
         .toast.show { display: flex; }
 
         /* ===== অ্যানিমেশন ===== */
@@ -143,8 +206,8 @@
         @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -156,9 +219,27 @@
                 <span class="flag">🇧🇩</span>
                 <h1>ভোটার তালিকা <small>Bangladesh Voter API</small></h1>
             </div>
-            <div class="status-badge" id="statusBadge">
-                <i class="fas fa-circle"></i> <span id="statusText">সংযোগ হচ্ছে...</span>
+            <div class="header-right">
+                <button class="accessibility-btn" onclick="toggleFontSize()" title="টেক্সট বড় করুন">
+                    <i class="fas fa-text-height"></i> <span id="fontSizeLabel">A</span>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="ডার্ক/লাইট মোড">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <div class="status-badge" id="statusBadge">
+                    <i class="fas fa-circle"></i> <span id="statusText">সংযোগ হচ্ছে...</span>
+                </div>
             </div>
+        </div>
+
+        <!-- ব্রেডক্রাম্ব -->
+        <div class="breadcrumb" id="breadcrumb" style="display:none;">
+            <i class="fas fa-home"></i> <span class="crumb-link" onclick="resetToDivision()">বাংলাদেশ</span>
+            <i class="fas fa-chevron-right"></i> <span id="bcDivision" class="crumb-link" onclick="resetToDistrict()">—</span>
+            <i class="fas fa-chevron-right"></i> <span id="bcDistrict" class="crumb-link" onclick="resetToUpazila()">—</span>
+            <i class="fas fa-chevron-right"></i> <span id="bcUpazila" class="crumb-link" onclick="resetToUnion()">—</span>
+            <i class="fas fa-chevron-right"></i> <span id="bcUnion" class="crumb-link" onclick="resetToVillage()">—</span>
+            <i class="fas fa-chevron-right"></i> <span id="bcVillage">—</span>
         </div>
 
         <!-- সিলেক্টর -->
@@ -190,11 +271,16 @@
             <div class="meta-grid" id="metaGrid"></div>
         </div>
 
-        <!-- সার্চ ফিল্টার (হাইলাইট সহ) -->
+        <!-- এক্সপোর্ট অল -->
+        <div class="export-section" id="exportSection">
+            <button class="export-btn" onclick="exportAllData()"><i class="fas fa-file-export"></i> সমস্ত ভোটার এক্সপোর্ট করুন (JSON)</button>
+        </div>
+
+        <!-- সার্চ ফিল্টার -->
         <div class="filter-section" id="filterSection">
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="নাম, আইডি, পিতা, মাতা, ঠিকানা, পেশা দিয়ে খুঁজুন..." />
+                <input type="text" id="searchInput" placeholder="সিরিয়াল, নাম, আইডি, পিতা, মাতা, জন্ম, পেশা, ঠিকানা দিয়ে খুঁজুন..." />
             </div>
             <div class="voter-count" id="voterCount">মোট: ০</div>
         </div>
@@ -202,9 +288,9 @@
         <!-- ভোটার গ্রিড -->
         <div class="voter-grid" id="voterGrid"></div>
 
-        <!-- লোড মোর বাটন -->
-        <div class="load-more-container" id="loadMoreContainer">
-            <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreVoters()">আরও লোড করুন</button>
+        <!-- ইনফিনিট স্ক্রোল সেন্টিনেল -->
+        <div class="sentinel" id="scrollSentinel">
+            <div class="loading-dots"><i class="fas fa-spinner fa-pulse"></i> লোড হচ্ছে...</div>
         </div>
     </div>
 
@@ -212,7 +298,7 @@
     <div class="modal-overlay" id="copyModal" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="modal-handle"></span>
-            <h3><i class="fas fa-copy" style="color:#3b82f6;"></i> কপি করার তথ্য</h3>
+            <h3><i class="fas fa-copy" style="color:var(--btn-primary);"></i> কপি করার তথ্য</h3>
             <div class="modal-options" id="copyOptions">
                 <label><input type="checkbox" value="name" checked> <i class="fas fa-user" style="width:16px;"></i> নাম</label>
                 <label><input type="checkbox" value="voter_id" checked> <i class="fas fa-id-card" style="width:16px;"></i> ভোটার আইডি</label>
@@ -231,7 +317,7 @@
     <div class="modal-overlay" id="downloadModal" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="modal-handle"></span>
-            <h3><i class="fas fa-download" style="color:#3b82f6;"></i> ফরম্যাট নির্বাচন</h3>
+            <h3><i class="fas fa-download" style="color:var(--btn-primary);"></i> ফরম্যাট নির্বাচন</h3>
             <div class="download-grid" id="downloadOptions">
                 <button onclick="performDownload('json')"><i class="fas fa-code"></i> JSON</button>
                 <button onclick="performDownload('csv')"><i class="fas fa-file-csv"></i> CSV</button>
@@ -259,7 +345,7 @@
         // ================================================================
         //  কনফিগারেশন
         // ================================================================
-        const API_BASE = 'https://bangladesh-api-2.onrender.com/api'; // আপনার API লিংক
+        const API_BASE = 'https://bangladesh-api-2.onrender.com/api';
 
         // ================================================================
         //  DOM এলিমেন্ট
@@ -280,20 +366,58 @@
         const searchInput = document.getElementById('searchInput');
         const voterCount = document.getElementById('voterCount');
         const voterGrid = document.getElementById('voterGrid');
-        const loadMoreContainer = document.getElementById('loadMoreContainer');
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        const copyModal = document.getElementById('copyModal');
-        const downloadModal = document.getElementById('downloadModal');
+        const sentinel = document.getElementById('scrollSentinel');
+        const loadingDots = document.querySelector('.loading-dots');
         const toastMsg = document.getElementById('toastMsg');
         const toastText = document.getElementById('toastText');
+        const breadcrumb = document.getElementById('breadcrumb');
+        const exportSection = document.getElementById('exportSection');
 
         let state = { 
             allVoters: [], 
             filteredVoters: [], 
             displayLimit: 30, 
             currentCardData: null,
-            currentSearchQuery: ''
+            currentSearchQuery: '',
+            hierarchy: { division: null, district: null, upazila: null, union: null, village: null },
+            isLoadingMore: false
         };
+
+        // ================================================================
+        //  থিম ও অ্যাক্সেসিবিলিটি ফিচার
+        // ================================================================
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function toggleFontSize() {
+            const body = document.body;
+            const label = document.getElementById('fontSizeLabel');
+            let currentSize = parseFloat(window.getComputedStyle(body).fontSize);
+            if (currentSize >= 22) {
+                body.style.fontSize = '16px';
+                label.textContent = 'A';
+            } else {
+                body.style.fontSize = (currentSize + 2) + 'px';
+                label.textContent = 'A+';
+            }
+        }
+
+        // লোড হওয়ার সময় থিম চেক করা
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeIcon').className = 'fas fa-sun';
+        }
 
         // ================================================================
         //  হেল্পার ফাংশন
@@ -337,7 +461,33 @@
         }
 
         // ================================================================
-        //  লোড ফাংশন (হায়ারার্কি)
+        //  ব্রেডক্রাম্ব লজিক
+        // ================================================================
+        function updateBreadcrumb() {
+            const h = state.hierarchy;
+            const bc = breadcrumb;
+            bc.style.display = 'flex';
+            
+            document.getElementById('bcDivision').textContent = h.division || '—';
+            document.getElementById('bcDistrict').textContent = h.district || '—';
+            document.getElementById('bcUpazila').textContent = h.upazila || '—';
+            document.getElementById('bcUnion').textContent = h.union || '—';
+            document.getElementById('bcVillage').textContent = h.village || '—';
+        }
+
+        function resetToDivision() {
+            state.hierarchy = { division: null, district: null, upazila: null, union: null, village: null };
+            breadcrumb.style.display = 'none';
+            divisionSelect.value = '';
+            loadDistricts('');
+        }
+        function resetToDistrict() { districtSelect.value = ''; loadUpazilas(''); }
+        function resetToUpazila() { upazilaSelect.value = ''; loadUnions(''); }
+        function resetToUnion() { unionSelect.value = ''; loadVillages(''); }
+        function resetToVillage() { villageSelect.value = ''; loadVillageDetails(''); }
+
+        // ================================================================
+        //  লোড ফাংশন
         // ================================================================
         async function loadDivisions() {
             try {
@@ -356,11 +506,13 @@
             try {
                 showLoading(true);
                 const data = await apiFetch(`/divisions/${divisionId}`);
+                const selectedText = divisionSelect.options[divisionSelect.selectedIndex]?.text || '—';
+                state.hierarchy.division = selectedText;
                 populateSelect(districtSelect, data.districts || [], 'জেলা সিলেক্ট করুন');
                 clearSelect(upazilaSelect, 'প্রথমে জেলা সিলেক্ট করুন');
                 clearSelect(unionSelect, 'প্রথমে উপজেলা সিলেক্ট করুন');
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
-                resetUI();
+                updateBreadcrumb(); resetUI();
             } finally { showLoading(false); }
         }
 
@@ -369,10 +521,12 @@
             try {
                 showLoading(true);
                 const data = await apiFetch(`/districts/${districtId}`);
+                const selectedText = districtSelect.options[districtSelect.selectedIndex]?.text || '—';
+                state.hierarchy.district = selectedText;
                 populateSelect(upazilaSelect, data.upazilas || [], 'উপজেলা সিলেক্ট করুন');
                 clearSelect(unionSelect, 'প্রথমে উপজেলা সিলেক্ট করুন');
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
-                resetUI();
+                updateBreadcrumb(); resetUI();
             } finally { showLoading(false); }
         }
 
@@ -381,9 +535,11 @@
             try {
                 showLoading(true);
                 const data = await apiFetch(`/upazilas/${upazilaId}`);
+                const selectedText = upazilaSelect.options[upazilaSelect.selectedIndex]?.text || '—';
+                state.hierarchy.upazila = selectedText;
                 populateSelect(unionSelect, data.unions || [], 'ইউনিয়ন সিলেক্ট করুন');
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
-                resetUI();
+                updateBreadcrumb(); resetUI();
             } finally { showLoading(false); }
         }
 
@@ -392,8 +548,10 @@
             try {
                 showLoading(true);
                 const data = await apiFetch(`/unions/${unionId}`);
+                const selectedText = unionSelect.options[unionSelect.selectedIndex]?.text || '—';
+                state.hierarchy.union = selectedText;
                 populateSelect(villageSelect, data.villages || [], 'গ্রাম সিলেক্ট করুন');
-                resetUI();
+                updateBreadcrumb(); resetUI();
             } finally { showLoading(false); }
         }
 
@@ -402,12 +560,13 @@
             try {
                 showLoading(true);
                 const data = await apiFetch(`/villages/${villageId}`);
+                const selectedText = villageSelect.options[villageSelect.selectedIndex]?.text || '—';
+                state.hierarchy.village = selectedText;
                 state.currentVillageData = data;
                 genderSelectGroup.classList.add('active');
                 genderSelect.value = '';
-                state.allVoters = [];
-                state.filteredVoters = [];
-                resetUI();
+                state.allVoters = []; state.filteredVoters = [];
+                updateBreadcrumb(); resetUI();
             } finally { showLoading(false); }
         }
 
@@ -418,17 +577,17 @@
                 const response = await fetch(`${API_BASE}/population/${gender}/${state.currentVillageData.id}`);
                 if (!response.ok) throw new Error('ফাইল লোড করতে ব্যর্থ');
                 const json = await response.json();
-                
-                // JSON থেকে ১০০% ডেটা সঠিকভাবে নেওয়া
                 state.allVoters = json.data.voters || [];
                 state.filteredVoters = [...state.allVoters];
                 state.displayLimit = 30;
                 state.currentSearchQuery = '';
-                
                 renderMeta(json.data.meta);
                 renderVoterCards();
                 filterSection.style.display = 'flex';
+                exportSection.classList.add('active');
                 updateVoterCount(state.filteredVoters.length);
+                // ইনফিনিট স্ক্রোল সেন্টিনেল দেখানো
+                sentinel.style.display = 'flex';
             } catch (err) {
                 console.error(err);
                 showToast('⚠️ ভোটার ডেটা লোড করতে সমস্যা!');
@@ -437,7 +596,7 @@
         }
 
         // ================================================================
-        //  রেন্ডার ফাংশন (মেটা + কার্ড + হাইলাইট)
+        //  রেন্ডার ফাংশন
         // ================================================================
         function renderMeta(meta) {
             if (!meta) { metaCard.classList.remove('active'); return; }
@@ -455,15 +614,12 @@
             `;
         }
 
-        // টেক্সট হাইলাইট করার ফাংশন
         function highlightText(text, query) {
             if (!text || !query || query.trim() === '') return text;
             try {
                 const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
                 return text.replace(regex, '<span class="highlight">$1</span>');
-            } catch (e) {
-                return text;
-            }
+            } catch (e) { return text; }
         }
 
         function renderVoterCards() {
@@ -471,19 +627,16 @@
             const query = state.currentSearchQuery.trim();
             
             if (toShow.length === 0) {
-                voterGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b; font-size:16px; font-weight:500;">
-                    <i class="fas fa-user-slash" style="font-size:40px; display:block; margin-bottom:12px; color:#94a3b8;"></i>
+                voterGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-light); font-size:16px; font-weight:500;">
+                    <i class="fas fa-user-slash" style="font-size:40px; display:block; margin-bottom:12px; color:var(--border);"></i>
                     কোনো ভোটার পাওয়া যায়নি!
                 </div>`;
-                loadMoreContainer.style.display = 'none';
                 return;
             }
 
             let html = '';
             toShow.forEach((voter, index) => {
                 const serial = voter.serial || index + 1;
-                
-                // শুধুমাত্র মিলে যাওয়া টেক্সটগুলো হাইলাইট করা
                 const nameHtml = highlightText(voter.name || '—', query);
                 const idHtml = highlightText(voter.voter_id || '—', query);
                 const fatherHtml = highlightText(voter.father || '—', query);
@@ -509,43 +662,55 @@
                         <div class="card-actions">
                             <button onclick="openCopyModal(${index})"><i class="fas fa-copy"></i> কপি</button>
                             <button onclick="openDownloadModal(${index})"><i class="fas fa-download"></i> ডাউনলোড</button>
+                            <button onclick="shareVoter(${index})"><i class="fas fa-share-alt"></i> শেয়ার</button>
                         </div>
                     </div>
                 `;
             });
             voterGrid.innerHTML = html;
             updateVoterCount(state.filteredVoters.length);
-
-            if (state.filteredVoters.length > state.displayLimit) {
-                loadMoreContainer.style.display = 'block';
-                loadMoreBtn.disabled = false;
-                loadMoreBtn.textContent = `আরও লোড করুন (${state.displayLimit} / ${state.filteredVoters.length})`;
-            } else {
-                loadMoreContainer.style.display = 'none';
-            }
-        }
-
-        function loadMoreVoters() {
-            state.displayLimit += 30;
-            renderVoterCards();
         }
 
         function updateVoterCount(count) { voterCount.textContent = `মোট: ${count}`; }
 
         // ================================================================
-        //  হাই-পারফরম্যান্স প্রফেশনাল সার্চ ইঞ্জিন
+        //  ইনফিনিট স্ক্রোল (Intersection Observer)
+        // ================================================================
+        let observer = null;
+        function setupInfiniteScroll() {
+            if (observer) observer.disconnect();
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !state.isLoadingMore) {
+                    if (state.displayLimit < state.filteredVoters.length) {
+                        state.isLoadingMore = true;
+                        loadingDots.style.display = 'block';
+                        setTimeout(() => {
+                            state.displayLimit += 30;
+                            renderVoterCards();
+                            state.isLoadingMore = false;
+                            loadingDots.style.display = 'none';
+                        }, 500);
+                    } else {
+                        loadingDots.textContent = '✅ সব ভোটার লোড করা হয়েছে';
+                        loadingDots.style.color = '#10b981';
+                    }
+                }
+            }, { root: null, rootMargin: '0px 0px 100px 0px', threshold: 0.1 });
+            observer.observe(sentinel);
+        }
+
+        // ================================================================
+        //  সার্চ ফিল্টার
         // ================================================================
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             state.currentSearchQuery = query;
-            
             if (!state.allVoters.length) return;
             if (query === '') {
                 state.filteredVoters = [...state.allVoters];
             } else {
                 const lowerQuery = query.toLowerCase();
                 state.filteredVoters = state.allVoters.filter(voter => {
-                    // সব ফিল্ড একসাথে সার্চ করা (JSON এর সব ডেটা দিয়ে)
                     return (
                         (voter.serial && String(voter.serial).toLowerCase().includes(lowerQuery)) ||
                         (voter.name && voter.name.toLowerCase().includes(lowerQuery)) ||
@@ -559,7 +724,6 @@
                     );
                 });
             }
-            
             state.displayLimit = 30;
             renderVoterCards();
         });
@@ -583,11 +747,13 @@
         function resetUI() {
             metaCard.classList.remove('active');
             filterSection.style.display = 'none';
+            exportSection.classList.remove('active');
             voterGrid.innerHTML = '';
-            loadMoreContainer.style.display = 'none';
-            state.allVoters = [];
-            state.filteredVoters = [];
-            state.currentSearchQuery = '';
+            state.allVoters = []; state.filteredVoters = []; state.currentSearchQuery = '';
+            sentinel.style.display = 'none';
+            loadingDots.textContent = '<i class="fas fa-spinner fa-pulse"></i> লোড হচ্ছে...';
+            loadingDots.style.color = 'var(--btn-primary)';
+            if (observer) { observer.disconnect(); observer = null; }
         }
 
         function resetAllSelects() {
@@ -605,6 +771,33 @@
         }
 
         // ================================================================
+        //  এক্সপোর্ট অল ফিচার
+        // ================================================================
+        function exportAllData() {
+            if (state.filteredVoters.length === 0) { showToast('⚠️ এক্সপোর্ট করার জন্য কোনো ভোটার নেই!'); return; }
+            const dataToExport = state.filteredVoters;
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `all_voters_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            showToast(`📥 ${dataToExport.length} জন ভোটারের ডেটা ডাউনলোড হচ্ছে!`);
+        }
+
+        // ================================================================
+        //  শেয়ার ফিচার
+        // ================================================================
+        function shareVoter(index) {
+            const data = state.filteredVoters[index];
+            const text = `নাম: ${data.name || '—'}\nআইডি: ${data.voter_id || '—'}\nপিতা: ${data.father || '—'}\nমাতা: ${data.mother || '—'}\nঠিকানা: ${data.address || '—'}`;
+            if (navigator.share) {
+                navigator.share({ title: 'ভোটার তথ্য', text: text }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(text).then(() => showToast('✅ শেয়ার করার জন্য টেক্সট কপি করা হয়েছে!'));
+            }
+        }
+
+        // ================================================================
         //  কপি ফাংশনালিটি
         // ================================================================
         function openCopyModal(index) {
@@ -616,8 +809,7 @@
 
         function closeModal(event) {
             if (event.target === event.currentTarget) {
-                closeModalById('copyModal');
-                closeModalById('downloadModal');
+                closeModalById('copyModal'); closeModalById('downloadModal');
             }
         }
 
@@ -632,25 +824,17 @@
             let textToCopy = '';
             checks.forEach(el => {
                 const val = state.currentCardData[el.value] || '—';
-                const label = el.value === 'name' ? 'নাম' : 
-                              el.value === 'voter_id' ? 'ভোটার আইডি' :
-                              el.value === 'father' ? 'পিতা' :
-                              el.value === 'mother' ? 'মাতা' : 'ঠিকানা';
+                const label = el.value === 'name' ? 'নাম' : el.value === 'voter_id' ? 'ভোটার আইডি' : el.value === 'father' ? 'পিতা' : el.value === 'mother' ? 'মাতা' : 'ঠিকানা';
                 textToCopy += `${label}: ${val}\n`;
             });
-            
             navigator.clipboard.writeText(textToCopy.trim()).then(() => {
-                showToast('✅ সফলভাবে কপি করা হয়েছে!');
-                closeModalById('copyModal');
+                showToast('✅ সফলভাবে কপি করা হয়েছে!'); closeModalById('copyModal');
             }).catch(() => {
                 const textarea = document.createElement('textarea');
                 textarea.value = textToCopy.trim();
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast('✅ সফলভাবে কপি করা হয়েছে!');
-                closeModalById('copyModal');
+                document.body.appendChild(textarea); textarea.select();
+                document.execCommand('copy'); document.body.removeChild(textarea);
+                showToast('✅ সফলভাবে কপি করা হয়েছে!'); closeModalById('copyModal');
             });
         }
 
@@ -669,44 +853,22 @@
             let content = '', filename = `voter_${data.voter_id || data.serial || 'unknown'}`;
 
             switch(format) {
-                case 'json':
-                    content = JSON.stringify(data, null, 2);
-                    filename += '.json'; break;
-                case 'csv':
-                    content = `Serial,Name,Voter ID,Father,Mother,DOB,Occupation,Address\n${data.serial || ''},"${data.name || ''}","${data.voter_id || ''}","${data.father || ''}","${data.mother || ''}","${data.date_of_birth || ''}","${data.occupation || ''}","${data.address || ''}"`;
-                    filename += '.csv'; break;
-                case 'txt':
-                    content = `নাম: ${data.name || '—'}\nভোটার আইডি: ${data.voter_id || '—'}\nপিতা: ${data.father || '—'}\nমাতা: ${data.mother || '—'}\nজন্ম তারিখ: ${data.date_of_birth || '—'}\nপেশা: ${data.occupation || '—'}\nঠিকানা: ${data.address || '—'}`;
-                    filename += '.txt'; break;
-                case 'xml':
-                    content = `<voter>\n  <serial>${data.serial || ''}</serial>\n  <name>${data.name || ''}</name>\n  <voter_id>${data.voter_id || ''}</voter_id>\n  <father>${data.father || ''}</father>\n  <mother>${data.mother || ''}</mother>\n  <dob>${data.date_of_birth || ''}</dob>\n  <occupation>${data.occupation || ''}</occupation>\n  <address>${data.address || ''}</address>\n</voter>`;
-                    filename += '.xml'; break;
-                case 'html':
-                    content = `<div style="font-family:sans-serif;padding:20px;border:1px solid #ddd;border-radius:12px;max-width:400px;"><h3>${data.name || '—'}</h3><p><strong>ID:</strong> ${data.voter_id || '—'}</p><p><strong>Father:</strong> ${data.father || '—'}</p><p><strong>Mother:</strong> ${data.mother || '—'}</p><p><strong>DOB:</strong> ${data.date_of_birth || '—'}</p><p><strong>Occupation:</strong> ${data.occupation || '—'}</p><p><strong>Address:</strong> ${data.address || '—'}</p></div>`;
-                    filename += '.html'; break;
-                case 'md':
-                    content = `# ${data.name || '—'}\n\n- **ভোটার আইডি:** ${data.voter_id || '—'}\n- **পিতা:** ${data.father || '—'}\n- **মাতা:** ${data.mother || '—'}\n- **জন্ম তারিখ:** ${data.date_of_birth || '—'}\n- **পেশা:** ${data.occupation || '—'}\n- **ঠিকানা:** ${data.address || '—'}`;
-                    filename += '.md'; break;
-                case 'pdf': case 'png':
-                    closeModalById('downloadModal');
-                    window.print(); return;
-                case 'doc':
-                    content = `<html><body><h1>${data.name || ''}</h1><table border="1" cellpadding="8"><tr><td>Voter ID</td><td>${data.voter_id || ''}</td></tr><tr><td>Father</td><td>${data.father || ''}</td></tr><tr><td>Mother</td><td>${data.mother || ''}</td></tr><tr><td>DOB</td><td>${data.date_of_birth || ''}</td></tr><tr><td>Occupation</td><td>${data.occupation || ''}</td></tr><tr><td>Address</td><td>${data.address || ''}</td></tr></table></body></html>`;
-                    filename += '.doc'; break;
-                case 'xls':
-                    content = `Serial\tName\tVoter ID\tFather\tMother\tDOB\tOccupation\tAddress\n${data.serial || ''}\t${data.name || ''}\t${data.voter_id || ''}\t${data.father || ''}\t${data.mother || ''}\t${data.date_of_birth || ''}\t${data.occupation || ''}\t${data.address || ''}`;
-                    filename += '.xls'; break;
+                case 'json': content = JSON.stringify(data, null, 2); filename += '.json'; break;
+                case 'csv': content = `Serial,Name,Voter ID,Father,Mother,DOB,Occupation,Address\n${data.serial || ''},"${data.name || ''}","${data.voter_id || ''}","${data.father || ''}","${data.mother || ''}","${data.date_of_birth || ''}","${data.occupation || ''}","${data.address || ''}"`; filename += '.csv'; break;
+                case 'txt': content = `নাম: ${data.name || '—'}\nভোটার আইডি: ${data.voter_id || '—'}\nপিতা: ${data.father || '—'}\nমাতা: ${data.mother || '—'}\nজন্ম তারিখ: ${data.date_of_birth || '—'}\nপেশা: ${data.occupation || '—'}\nঠিকানা: ${data.address || '—'}`; filename += '.txt'; break;
+                case 'xml': content = `<voter>\n  <serial>${data.serial || ''}</serial>\n  <name>${data.name || ''}</name>\n  <voter_id>${data.voter_id || ''}</voter_id>\n  <father>${data.father || ''}</father>\n  <mother>${data.mother || ''}</mother>\n  <dob>${data.date_of_birth || ''}</dob>\n  <occupation>${data.occupation || ''}</occupation>\n  <address>${data.address || ''}</address>\n</voter>`; filename += '.xml'; break;
+                case 'html': content = `<div style="font-family:sans-serif;padding:20px;border:1px solid #ddd;border-radius:12px;"><h3>${data.name || '—'}</h3><p><strong>ID:</strong> ${data.voter_id || '—'}</p><p><strong>Father:</strong> ${data.father || '—'}</p><p><strong>Mother:</strong> ${data.mother || '—'}</p><p><strong>DOB:</strong> ${data.date_of_birth || '—'}</p><p><strong>Occupation:</strong> ${data.occupation || '—'}</p><p><strong>Address:</strong> ${data.address || '—'}</p></div>`; filename += '.html'; break;
+                case 'md': content = `# ${data.name || '—'}\n\n- **ভোটার আইডি:** ${data.voter_id || '—'}\n- **পিতা:** ${data.father || '—'}\n- **মাতা:** ${data.mother || '—'}\n- **জন্ম তারিখ:** ${data.date_of_birth || '—'}\n- **পেশা:** ${data.occupation || '—'}\n- **ঠিকানা:** ${data.address || '—'}`; filename += '.md'; break;
+                case 'pdf': case 'png': closeModalById('downloadModal'); window.print(); return;
+                case 'doc': content = `<html><body><h1>${data.name || ''}</h1><table><tr><td>Voter ID</td><td>${data.voter_id || ''}</td></tr><tr><td>Father</td><td>${data.father || ''}</td></tr><tr><td>Mother</td><td>${data.mother || ''}</td></tr><tr><td>DOB</td><td>${data.date_of_birth || ''}</td></tr><tr><td>Occupation</td><td>${data.occupation || ''}</td></tr><tr><td>Address</td><td>${data.address || ''}</td></tr></table></body></html>`; filename += '.doc'; break;
+                case 'xls': content = `Serial\tName\tVoter ID\tFather\tMother\tDOB\tOccupation\tAddress\n${data.serial || ''}\t${data.name || ''}\t${data.voter_id || ''}\t${data.father || ''}\t${data.mother || ''}\t${data.date_of_birth || ''}\t${data.occupation || ''}\t${data.address || ''}`; filename += '.xls'; break;
                 default: return;
             }
 
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
+            link.href = URL.createObjectURL(blob); link.download = filename;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
             closeModalById('downloadModal');
             showToast(`📥 ${filename} ডাউনলোড শুরু হয়েছে!`);
         }
@@ -715,6 +877,7 @@
         //  অ্যাপ্লিকেশন স্টার্ট
         // ================================================================
         loadDivisions();
+        setupInfiniteScroll();
     </script>
 </body>
 </html>
