@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল প্ল্যাটফর্ম</title>
     
+    <!-- প্রফেশনাল ফন্ট (Hind Siliguri + Inter + JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <style>
@@ -20,13 +22,15 @@
             --border: #e2e8f0;
             --meta-bg: rgba(239, 246, 255, 0.8);
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-hover: 0 20px 25px -5px rgba(59, 130, 246, 0.15);
             --highlight: #fef08a;
             --highlight-text: #0f172a;
             --btn-primary: #3b82f6;
             --btn-primary-hover: #2563eb;
+            --btn-text: #ffffff;
             --input-bg: #ffffff;
             --loader-color: #3b82f6;
+            --card-glow: rgba(59, 130, 246, 0.2);
         }
 
         [data-theme="dark"] {
@@ -37,13 +41,15 @@
             --border: #334155;
             --meta-bg: rgba(30, 41, 59, 0.9);
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
-            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.5);
+            --shadow-hover: 0 20px 25px -5px rgba(96, 165, 250, 0.15);
             --highlight: #a16207;
             --highlight-text: #fef08a;
             --btn-primary: #3b82f6;
             --btn-primary-hover: #60a5fa;
+            --btn-text: #ffffff;
             --input-bg: #1e293b;
             --loader-color: #60a5fa;
+            --card-glow: rgba(96, 165, 250, 0.2);
         }
 
         /* ===== রিসেট ও বেসিক ===== */
@@ -100,6 +106,14 @@
         .gender-select-group select { width: 100%; max-width: 400px; margin: 0 auto; display: block; padding: 14px 16px; border: 2px solid var(--border); border-radius: 16px; font-size: 16px; font-family: inherit; background: var(--input-bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; transition: all 0.2s; cursor: pointer; }
         .gender-select-group select:focus { border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
 
+        /* ===== রিয়েল-টাইম ডেটা স্ট্যাটিস্টিকস ড্যাশবোর্ড ===== */
+        .stats-dashboard { display: none; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; animation: fadeUp 0.4s ease; }
+        .stats-dashboard.active { display: flex; }
+        .stats-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 12px 18px; flex: 1; min-width: 100px; text-align: center; box-shadow: var(--shadow); transition: all 0.3s; }
+        .stats-card:hover { transform: translateY(-2px); border-color: var(--btn-primary); }
+        .stats-card .stats-number { font-family: 'JetBrains Mono', 'Inter', monospace; font-size: 24px; font-weight: 700; color: var(--btn-primary); }
+        .stats-card .stats-label { font-size: 12px; color: var(--text-light); font-weight: 500; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
         /* ===== মেটা কার্ড ===== */
         .meta-card { display: none; background: var(--meta-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; padding: 16px 20px; margin-top: 16px; border: 1px solid rgba(59, 130, 246, 0.2); border-left: 6px solid var(--btn-primary); animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1); transition: background 0.3s, border-color 0.3s; }
         .meta-card.active { display: block; }
@@ -115,15 +129,26 @@
         .export-section.active { display: flex; }
         .export-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-family: inherit; box-shadow: var(--shadow); }
         .export-btn:active { transform: scale(0.95); }
-        .export-btn:hover { border-color: var(--btn-primary); }
+        .export-btn:hover { border-color: var(--btn-primary); color: var(--btn-primary); }
 
-        /* ===== সার্চ ফিল্টার ===== */
+        /* ===== সার্চ ফিল্টার (এডভান্সড) ===== */
         .filter-section { display: none; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease; }
-        .filter-section .search-wrapper { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 4px 4px 4px 16px; border-radius: 30px; border: 1.5px solid var(--border); transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .filter-section .search-wrapper { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 4px 4px 4px 16px; border-radius: 30px; border: 1.5px solid var(--border); transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); position: relative; }
         .filter-section .search-wrapper:focus-within { border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
         .filter-section .search-wrapper i { color: var(--text-light); font-size: 14px; }
-        .filter-section .search-wrapper input { border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; width: 100%; padding: 10px 10px 10px 0; color: var(--text); }
+        .filter-section .search-wrapper input { border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; width: 100%; padding: 10px 10px 10px 0; color: var(--text); padding-right: 40px; }
         .filter-section .search-wrapper input::placeholder { color: var(--text-light); }
+        
+        /* ভয়েস সার্চ মাইক বাটন */
+        .voice-search-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-light); font-size: 18px; cursor: pointer; padding: 8px; transition: all 0.3s; border-radius: 50%; }
+        .voice-search-btn:active { color: var(--btn-primary); transform: translateY(-50%) scale(0.9); }
+        .voice-search-btn.listening { color: #ef4444; animation: pulse-mic 1s infinite; }
+        @keyframes pulse-mic { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* অ্যাডভান্সড ফিল্টার ড্রপডাউন */
+        .adv-filter-select { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 30px; font-size: 14px; font-family: inherit; background: var(--input-bg); color: var(--text); appearance: none; padding-right: 36px; cursor: pointer; transition: all 0.2s; min-width: 120px; }
+        .adv-filter-select:focus { outline: none; border-color: var(--btn-primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+
         .filter-section .voter-count { font-size: 14px; font-weight: 600; color: var(--text); background: var(--card-bg); padding: 8px 18px; border-radius: 30px; white-space: nowrap; border: 1px solid var(--border); transition: all 0.3s; }
 
         /* ===== ভোটার গ্রিড ===== */
@@ -131,10 +156,13 @@
         @media (min-width: 600px) { .voter-grid { grid-template-columns: 1fr 1fr; } }
         @media (min-width: 900px) { .voter-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
-        /* ===== প্রফেশনাল ভোটার কার্ড (হোভার এনিমেশন সহ) ===== */
+        /* ===== প্রফেশনাল ভোটার কার্ড (হোভার গ্লো এনিমেশন) ===== */
         .voter-card { background: var(--card-bg); border-radius: 24px; padding: 20px 18px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); animation: fadeUp 0.6s ease backwards; position: relative; display: flex; flex-direction: column; overflow: hidden; }
-        .voter-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(59,130,246,0.05), transparent); transition: left 0.6s; pointer-events: none; }
+        .voter-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, var(--card-glow), transparent); transition: left 0.6s; pointer-events: none; }
+        .voter-card::after { content: ''; position: absolute; inset: 0; border-radius: 24px; opacity: 0; transition: opacity 0.4s; pointer-events: none; box-shadow: 0 0 30px var(--card-glow); }
+        
         .voter-card:hover::before { left: 100%; }
+        .voter-card:hover::after { opacity: 1; }
         .voter-card:active { transform: scale(0.98); }
         
         @media (hover: hover) {
@@ -143,24 +171,25 @@
 
         .voter-card .voter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid var(--border); padding-bottom: 12px; transition: border-color 0.3s; }
         .voter-card .voter-header .voter-name { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.3; letter-spacing: -0.3px; }
-        .voter-card .voter-header .voter-serial { background: var(--btn-primary); color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; height: fit-content; }
+        .voter-card .voter-header .voter-serial { font-family: 'JetBrains Mono', 'Inter', monospace; background: var(--btn-primary); color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; height: fit-content; }
         
         .voter-card .voter-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; flex-grow: 1; }
         .voter-card .voter-body .detail { font-size: 14px; color: var(--text); }
         .voter-card .voter-body .detail .label { font-weight: 500; color: var(--text-light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .voter-card .voter-body .detail .value { font-weight: 600; color: var(--text); margin-top: 2px; word-break: break-word; }
+        .voter-card .voter-body .detail .value { font-weight: 600; color: var(--text); margin-top: 2px; word-break: break-word; font-family: 'Inter', 'Hind Siliguri', sans-serif; }
         .voter-card .voter-body .detail.full-width { grid-column: 1 / -1; }
 
         /* ===== সার্চ হাইলাইট ===== */
         .highlight { background-color: var(--highlight); color: var(--highlight-text); padding: 0 2px; border-radius: 4px; font-weight: 700; transition: all 0.3s; }
 
-        /* ===== কার্ড অ্যাকশন ===== */
+        /* ===== কার্ড অ্যাকশন (হোভার কালার সহ) ===== */
         .voter-card .card-actions { display: flex; gap: 10px; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; justify-content: flex-end; transition: border-color 0.3s; }
-        .voter-card .card-actions button { background: var(--card-bg); border: 1px solid var(--border); padding: 10px 16px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; flex: 1; min-height: 44px; touch-action: manipulation; }
+        .voter-card .card-actions button { background: var(--card-bg); border: 1px solid var(--border); padding: 10px 16px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; flex: 1; min-height: 44px; touch-action: manipulation; }
         .voter-card .card-actions button:active { background: var(--bg); transform: scale(0.95); }
-        .voter-card .card-actions button i { font-size: 15px; }
-        .voter-card .card-actions button:hover { border-color: var(--btn-primary); color: var(--btn-primary); }
-
+        .voter-card .card-actions button i { font-size: 15px; transition: transform 0.3s; }
+        .voter-card .card-actions button:hover { border-color: var(--btn-primary); color: var(--btn-primary); background: rgba(59, 130, 246, 0.05); }
+        .voter-card .card-actions button:hover i { transform: scale(1.1); }
+        
         /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল ===== */
         .sentinel { height: 20px; width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
         .sentinel .loading-dots { font-size: 20px; color: var(--btn-primary); display: none; }
@@ -186,14 +215,18 @@
         .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .download-grid button { padding: 14px 8px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; min-height: 48px; touch-action: manipulation; }
         .download-grid button:active { background: var(--bg); border-color: var(--btn-primary); transform: scale(0.95); }
-        .download-grid button i { font-size: 16px; color: var(--btn-primary); }
+        .download-grid button:hover { border-color: var(--btn-primary); color: var(--btn-primary); }
+        .download-grid button i { font-size: 16px; color: var(--btn-primary); transition: transform 0.3s; }
+        .download-grid button:hover i { transform: scale(1.1); }
 
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
         .modal-actions button { padding: 10px 24px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; min-height: 44px; touch-action: manipulation; }
         .modal-actions .btn-cancel { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
         .modal-actions .btn-cancel:active { background: var(--bg); }
+        .modal-actions .btn-cancel:hover { border-color: var(--text-light); }
         .modal-actions .btn-primary { background: var(--btn-primary); color: #fff; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
         .modal-actions .btn-primary:active { transform: scale(0.95); }
+        .modal-actions .btn-primary:hover { background: var(--btn-primary-hover); }
 
         /* ===== টোস্ট ===== */
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 40px; font-size: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; display: none; align-items: center; gap: 10px; animation: slideUp 0.4s ease; font-family: inherit; width: calc(100% - 40px); max-width: 400px; justify-content: center; text-align: center; }
@@ -266,6 +299,14 @@
             </select>
         </div>
 
+        <!-- রিয়েল-টাইম স্ট্যাটিস্টিকস ড্যাশবোর্ড -->
+        <div class="stats-dashboard" id="statsDashboard">
+            <div class="stats-card"><div class="stats-number" id="statTotal">০</div><div class="stats-label">মোট ভোটার</div></div>
+            <div class="stats-card"><div class="stats-number" id="statMale">০</div><div class="stats-label">পুরুষ</div></div>
+            <div class="stats-card"><div class="stats-number" id="statFemale">০</div><div class="stats-label">মহিলা</div></div>
+            <div class="stats-card"><div class="stats-number" id="statTopOcc" style="font-size:18px;">—</div><div class="stats-label">সর্বোচ্চ পেশা</div></div>
+        </div>
+
         <!-- মেটা তথ্য -->
         <div class="meta-card" id="metaCard">
             <div class="meta-grid" id="metaGrid"></div>
@@ -276,12 +317,26 @@
             <button class="export-btn" onclick="exportAllData()"><i class="fas fa-file-export"></i> সমস্ত ভোটার এক্সপোর্ট করুন (JSON)</button>
         </div>
 
-        <!-- সার্চ ফিল্টার -->
+        <!-- সার্চ ফিল্টার (এডভান্সড) -->
         <div class="filter-section" id="filterSection">
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="সিরিয়াল, নাম, আইডি, পিতা, মাতা, জন্ম, পেশা, ঠিকানা দিয়ে খুঁজুন..." />
+                <!-- স্পিচ টু টেক্সট মাইক -->
+                <button class="voice-search-btn" id="voiceBtn" onclick="startVoiceSearch()" title="ভয়েস দিয়ে সার্চ করুন">
+                    <i class="fas fa-microphone"></i>
+                </button>
             </div>
+            <!-- অ্যাডভান্সড ফিল্টার ড্রপডাউন -->
+            <select class="adv-filter-select" id="advFilter">
+                <option value="all">সকল (All)</option>
+                <option value="male">👨 পুরুষ</option>
+                <option value="female">👩 মহিলা</option>
+                <option value="কৃষক">🌾 কৃষক</option>
+                <option value="ব্যবসা">🛍️ ব্যবসায়ী</option>
+                <option value="শ্রমিক">🔧 শ্রমিক</option>
+                <option value="চাকুরী">💼 চাকুরী</option>
+            </select>
             <div class="voter-count" id="voterCount">মোট: ০</div>
         </div>
 
@@ -325,8 +380,8 @@
                 <button onclick="performDownload('xml')"><i class="fas fa-file-code"></i> XML</button>
                 <button onclick="performDownload('html')"><i class="fas fa-globe"></i> HTML</button>
                 <button onclick="performDownload('md')"><i class="fas fa-pen-fancy"></i> Markdown</button>
-                <button onclick="performDownload('pdf')"><i class="fas fa-file-pdf"></i> PDF (Print)</button>
-                <button onclick="performDownload('png')"><i class="fas fa-image"></i> PNG (Print)</button>
+                <button onclick="performDownload('pdf')"><i class="fas fa-file-pdf"></i> PDF (একক কার্ড প্রিন্ট)</button>
+                <button onclick="performDownload('png')"><i class="fas fa-image"></i> PNG (একক কার্ড প্রিন্ট)</button>
                 <button onclick="performDownload('doc')"><i class="fas fa-file-word"></i> Word</button>
                 <button onclick="performDownload('xls')"><i class="fas fa-file-excel"></i> Excel</button>
             </div>
@@ -364,6 +419,7 @@
         const metaGrid = document.getElementById('metaGrid');
         const filterSection = document.getElementById('filterSection');
         const searchInput = document.getElementById('searchInput');
+        const advFilter = document.getElementById('advFilter');
         const voterCount = document.getElementById('voterCount');
         const voterGrid = document.getElementById('voterGrid');
         const sentinel = document.getElementById('scrollSentinel');
@@ -372,6 +428,8 @@
         const toastText = document.getElementById('toastText');
         const breadcrumb = document.getElementById('breadcrumb');
         const exportSection = document.getElementById('exportSection');
+        const statsDashboard = document.getElementById('statsDashboard');
+        const voiceBtn = document.getElementById('voiceBtn');
 
         let state = { 
             allVoters: [], 
@@ -379,6 +437,7 @@
             displayLimit: 30, 
             currentCardData: null,
             currentSearchQuery: '',
+            currentFilter: 'all',
             hierarchy: { division: null, district: null, upazila: null, union: null, village: null },
             isLoadingMore: false
         };
@@ -413,10 +472,46 @@
             }
         }
 
-        // লোড হওয়ার সময় থিম চেক করা
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeIcon').className = 'fas fa-sun';
+        }
+
+        // ================================================================
+        //  স্পিচ টু টেক্সট (ভয়েস সার্চ)
+        // ================================================================
+        let recognition = null;
+        function startVoiceSearch() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showToast('⚠️ আপনার ব্রাউজার ভয়েস সার্চ সাপোর্ট করে না।');
+                return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!recognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'bn-BD';
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    searchInput.value = transcript;
+                    searchInput.dispatchEvent(new Event('input'));
+                    voiceBtn.classList.remove('listening');
+                    showToast(`🔊 "${transcript}" পাওয়া গেছে!`);
+                };
+                recognition.onerror = function(event) {
+                    voiceBtn.classList.remove('listening');
+                    if(event.error === 'not-allowed') showToast('⚠️ মাইক্রোফোন পারমিশন দিন।');
+                };
+                recognition.onend = function() { voiceBtn.classList.remove('listening'); };
+            }
+            if (voiceBtn.classList.contains('listening')) {
+                recognition.stop();
+                voiceBtn.classList.remove('listening');
+                return;
+            }
+            recognition.start();
+            voiceBtn.classList.add('listening');
         }
 
         // ================================================================
@@ -467,7 +562,6 @@
             const h = state.hierarchy;
             const bc = breadcrumb;
             bc.style.display = 'flex';
-            
             document.getElementById('bcDivision').textContent = h.division || '—';
             document.getElementById('bcDistrict').textContent = h.district || '—';
             document.getElementById('bcUpazila').textContent = h.upazila || '—';
@@ -581,13 +675,15 @@
                 state.filteredVoters = [...state.allVoters];
                 state.displayLimit = 30;
                 state.currentSearchQuery = '';
+                state.currentFilter = 'all';
                 renderMeta(json.data.meta);
+                updateDashboard(json.data.meta);
                 renderVoterCards();
                 filterSection.style.display = 'flex';
                 exportSection.classList.add('active');
                 updateVoterCount(state.filteredVoters.length);
-                // ইনফিনিট স্ক্রোল সেন্টিনেল দেখানো
                 sentinel.style.display = 'flex';
+                statsDashboard.classList.add('active');
             } catch (err) {
                 console.error(err);
                 showToast('⚠️ ভোটার ডেটা লোড করতে সমস্যা!');
@@ -596,7 +692,7 @@
         }
 
         // ================================================================
-        //  রেন্ডার ফাংশন
+        //  রেন্ডার ফাংশন (মেটা, ড্যাশবোর্ড, কার্ড)
         // ================================================================
         function renderMeta(meta) {
             if (!meta) { metaCard.classList.remove('active'); return; }
@@ -612,6 +708,28 @@
                 <div class="meta-item"><div class="meta-label">মোট ভোটার</div><div class="meta-value">${meta.total_voters || 0} জন</div></div>
                 <div class="meta-item full-width"><div class="meta-label">শেষ হালনাগাদ</div><div class="meta-value">${meta.generated_at ? new Date(meta.generated_at).toLocaleString('bn-BD') : '—'}</div></div>
             `;
+        }
+
+        function updateDashboard(meta) {
+            if (!meta) return;
+            document.getElementById('statTotal').textContent = meta.total_voters || 0;
+            // মেটা থেকে পুরুষ ও মহিলা কাউন্ট নেওয়া (JSON ফাইলে থাকলে)
+            document.getElementById('statMale').textContent = meta.total_male_voters || 0;
+            document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
+            
+            // টপ পেশা বের করা (যদি ডেটা থেকে বের করা যায়)
+            if (state.allVoters.length > 0) {
+                const occCount = {};
+                state.allVoters.forEach(v => {
+                    const occ = v.occupation || 'অজানা';
+                    occCount[occ] = (occCount[occ] || 0) + 1;
+                });
+                let topOcc = '—', maxCount = 0;
+                for (const [occ, count] of Object.entries(occCount)) {
+                    if (count > maxCount) { maxCount = count; topOcc = occ; }
+                }
+                document.getElementById('statTopOcc').textContent = topOcc;
+            }
         }
 
         function highlightText(text, query) {
@@ -674,7 +792,7 @@
         function updateVoterCount(count) { voterCount.textContent = `মোট: ${count}`; }
 
         // ================================================================
-        //  ইনফিনিট স্ক্রোল (Intersection Observer)
+        //  ইনফিনিট স্ক্রোল
         // ================================================================
         let observer = null;
         function setupInfiniteScroll() {
@@ -700,33 +818,53 @@
         }
 
         // ================================================================
-        //  সার্চ ফিল্টার
+        //  সার্চ ও অ্যাডভান্সড ফিল্টার
         // ================================================================
-        searchInput.addEventListener('input', function() {
-            const query = this.value.trim();
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const filter = advFilter.value;
             state.currentSearchQuery = query;
+            state.currentFilter = filter;
+
             if (!state.allVoters.length) return;
-            if (query === '') {
-                state.filteredVoters = [...state.allVoters];
-            } else {
-                const lowerQuery = query.toLowerCase();
-                state.filteredVoters = state.allVoters.filter(voter => {
+            
+            let filtered = [...state.allVoters];
+
+            // টেক্সট সার্চ
+            if (query !== '') {
+                filtered = filtered.filter(voter => {
                     return (
-                        (voter.serial && String(voter.serial).toLowerCase().includes(lowerQuery)) ||
-                        (voter.name && voter.name.toLowerCase().includes(lowerQuery)) ||
-                        (voter.name_en && voter.name_en.toLowerCase().includes(lowerQuery)) ||
-                        (voter.voter_id && voter.voter_id.toLowerCase().includes(lowerQuery)) ||
-                        (voter.father && voter.father.toLowerCase().includes(lowerQuery)) ||
-                        (voter.mother && voter.mother.toLowerCase().includes(lowerQuery)) ||
-                        (voter.date_of_birth && voter.date_of_birth.toLowerCase().includes(lowerQuery)) ||
-                        (voter.occupation && voter.occupation.toLowerCase().includes(lowerQuery)) ||
-                        (voter.address && voter.address.toLowerCase().includes(lowerQuery))
+                        (voter.serial && String(voter.serial).toLowerCase().includes(query)) ||
+                        (voter.name && voter.name.toLowerCase().includes(query)) ||
+                        (voter.name_en && voter.name_en.toLowerCase().includes(query)) ||
+                        (voter.voter_id && voter.voter_id.toLowerCase().includes(query)) ||
+                        (voter.father && voter.father.toLowerCase().includes(query)) ||
+                        (voter.mother && voter.mother.toLowerCase().includes(query)) ||
+                        (voter.date_of_birth && voter.date_of_birth.toLowerCase().includes(query)) ||
+                        (voter.occupation && voter.occupation.toLowerCase().includes(query)) ||
+                        (voter.address && voter.address.toLowerCase().includes(query))
                     );
                 });
             }
+
+            // অ্যাডভান্সড ফিল্টার
+            if (filter !== 'all') {
+                if (filter === 'male') {
+                    filtered = filtered.filter(v => v.gender === 'male' || v.name.includes('মোঃ'));
+                } else if (filter === 'female') {
+                    filtered = filtered.filter(v => v.gender === 'female' || v.name.includes('মোছাঃ') || v.name.includes('খাতুন') || v.name.includes('বেগম'));
+                } else {
+                    filtered = filtered.filter(v => (v.occupation || '').includes(filter));
+                }
+            }
+
+            state.filteredVoters = filtered;
             state.displayLimit = 30;
             renderVoterCards();
-        });
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        advFilter.addEventListener('change', applyFilters);
 
         // ================================================================
         //  ইভেন্ট লিসেনার
@@ -748,6 +886,7 @@
             metaCard.classList.remove('active');
             filterSection.style.display = 'none';
             exportSection.classList.remove('active');
+            statsDashboard.classList.remove('active');
             voterGrid.innerHTML = '';
             state.allVoters = []; state.filteredVoters = []; state.currentSearchQuery = '';
             sentinel.style.display = 'none';
@@ -771,7 +910,7 @@
         }
 
         // ================================================================
-        //  এক্সপোর্ট অল ফিচার
+        //  এক্সপোর্ট অল
         // ================================================================
         function exportAllData() {
             if (state.filteredVoters.length === 0) { showToast('⚠️ এক্সপোর্ট করার জন্য কোনো ভোটার নেই!'); return; }
@@ -785,7 +924,7 @@
         }
 
         // ================================================================
-        //  শেয়ার ফিচার
+        //  শেয়ার
         // ================================================================
         function shareVoter(index) {
             const data = state.filteredVoters[index];
@@ -798,7 +937,7 @@
         }
 
         // ================================================================
-        //  কপি ফাংশনালিটি
+        //  কপি
         // ================================================================
         function openCopyModal(index) {
             state.currentCardData = state.filteredVoters[index];
@@ -839,7 +978,7 @@
         }
 
         // ================================================================
-        //  ডাউনলোড ফাংশনালিটি
+        //  ডাউনলোড (একক কার্ড প্রিন্ট ফিক্স সহ)
         // ================================================================
         function openDownloadModal(index) {
             state.currentCardData = state.filteredVoters[index];
@@ -859,7 +998,16 @@
                 case 'xml': content = `<voter>\n  <serial>${data.serial || ''}</serial>\n  <name>${data.name || ''}</name>\n  <voter_id>${data.voter_id || ''}</voter_id>\n  <father>${data.father || ''}</father>\n  <mother>${data.mother || ''}</mother>\n  <dob>${data.date_of_birth || ''}</dob>\n  <occupation>${data.occupation || ''}</occupation>\n  <address>${data.address || ''}</address>\n</voter>`; filename += '.xml'; break;
                 case 'html': content = `<div style="font-family:sans-serif;padding:20px;border:1px solid #ddd;border-radius:12px;"><h3>${data.name || '—'}</h3><p><strong>ID:</strong> ${data.voter_id || '—'}</p><p><strong>Father:</strong> ${data.father || '—'}</p><p><strong>Mother:</strong> ${data.mother || '—'}</p><p><strong>DOB:</strong> ${data.date_of_birth || '—'}</p><p><strong>Occupation:</strong> ${data.occupation || '—'}</p><p><strong>Address:</strong> ${data.address || '—'}</p></div>`; filename += '.html'; break;
                 case 'md': content = `# ${data.name || '—'}\n\n- **ভোটার আইডি:** ${data.voter_id || '—'}\n- **পিতা:** ${data.father || '—'}\n- **মাতা:** ${data.mother || '—'}\n- **জন্ম তারিখ:** ${data.date_of_birth || '—'}\n- **পেশা:** ${data.occupation || '—'}\n- **ঠিকানা:** ${data.address || '—'}`; filename += '.md'; break;
-                case 'pdf': case 'png': closeModalById('downloadModal'); window.print(); return;
+                case 'pdf': 
+                case 'png': 
+                    closeModalById('downloadModal');
+                    // শুধুমাত্র নির্দিষ্ট কার্ডটি প্রিন্ট করার জন্য কাস্টম স্টাইল
+                    const style = document.createElement('style');
+                    style.innerHTML = `@media print { body * { visibility: hidden; } .voter-card { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; border: 2px solid #000 !important; } .voter-card * { visibility: visible; color: #000 !important; } .highlight { background-color: #fef08a !important; color: #000 !important; } }`;
+                    document.head.appendChild(style);
+                    window.print();
+                    setTimeout(() => { document.head.removeChild(style); }, 100);
+                    return;
                 case 'doc': content = `<html><body><h1>${data.name || ''}</h1><table><tr><td>Voter ID</td><td>${data.voter_id || ''}</td></tr><tr><td>Father</td><td>${data.father || ''}</td></tr><tr><td>Mother</td><td>${data.mother || ''}</td></tr><tr><td>DOB</td><td>${data.date_of_birth || ''}</td></tr><tr><td>Occupation</td><td>${data.occupation || ''}</td></tr><tr><td>Address</td><td>${data.address || ''}</td></tr></table></body></html>`; filename += '.doc'; break;
                 case 'xls': content = `Serial\tName\tVoter ID\tFather\tMother\tDOB\tOccupation\tAddress\n${data.serial || ''}\t${data.name || ''}\t${data.voter_id || ''}\t${data.father || ''}\t${data.mother || ''}\t${data.date_of_birth || ''}\t${data.occupation || ''}\t${data.address || ''}`; filename += '.xls'; break;
                 default: return;
@@ -881,3 +1029,4 @@
     </script>
 </body>
 </html>
+
