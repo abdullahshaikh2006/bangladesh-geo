@@ -11,42 +11,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <style>
+        /* আপনার পূর্বের CSS একদম হুবহু রাখা হয়েছে */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            padding: 24px 30px;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 16px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+        body { font-family: 'Hind Siliguri', sans-serif; background: #f0f4f8; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); padding: 24px 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand h1 { font-size: 24px; font-weight: 700; color: #0f172a; }
         .brand h1 small { font-size: 13px; font-weight: 400; color: #64748b; display: block; }
-        
-        .status-badge {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 18px; border-radius: 50px; font-size: 14px; font-weight: 600;
-            background: #e2e8f0; color: #475569; transition: 0.3s;
-        }
+        .status-badge { display: flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 50px; font-size: 14px; font-weight: 600; background: #e2e8f0; color: #475569; transition: 0.3s; }
         .status-badge.online { background: #dcfce7; color: #166534; }
         .status-badge.offline { background: #fee2e2; color: #991b1b; }
         .status-badge.loading { background: #fef9c3; color: #854d0e; }
@@ -54,110 +27,49 @@
         .status-badge.online .dot { background: #22c55e; }
         .status-badge.offline .dot { background: #ef4444; }
         .status-badge.loading .dot { animation: pulse-dot 1s infinite; }
-
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        /* Selectors */
-        .selector-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 14px; margin-bottom: 20px;
-        }
+        .selector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 20px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 13px; font-weight: 600; color: #475569; }
-        .form-group select {
-            padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px;
-            background: #f8fafc; font-size: 15px; font-family: inherit;
-            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 14px center;
-            cursor: pointer; transition: all 0.2s;
-        }
+        .form-group select { padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc; font-size: 15px; font-family: inherit; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; transition: all 0.2s; }
         .form-group select:focus { border-color: #3b82f6; background: #fff; outline: none; }
         .form-group select:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        /* Loading Skeleton */
         .skeleton-loader { display: none; flex-direction: column; gap: 15px; padding: 20px 0; }
         .skeleton-loader.active { display: flex; }
-        .skeleton-item {
-            height: 80px; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-            background-size: 200% 100%; border-radius: 12px; animation: shimmer 1.5s infinite;
-        }
+        .skeleton-item { height: 80px; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); background-size: 200% 100%; border-radius: 12px; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        /* Gender */
         .gender-box { display: none; padding: 20px 0; border-top: 2px dashed #e2e8f0; margin-top: 15px; }
         .gender-box.active { display: block; }
-
-        /* Meta Info */
-        .meta-card {
-            display: none; background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            padding: 16px 20px; border-radius: 14px; margin-top: 20px; border-left: 6px solid #3b82f6;
-        }
+        .meta-card { display: none; background: linear-gradient(135deg, #eff6ff, #dbeafe); padding: 16px 20px; border-radius: 14px; margin-top: 20px; border-left: 6px solid #3b82f6; }
         .meta-card.active { display: block; }
         .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
         .meta-item { background: rgba(255,255,255,0.7); padding: 8px 12px; border-radius: 8px; text-align: center; }
         .meta-label { font-size: 12px; color: #64748b; font-weight: 500; }
         .meta-value { font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 2px; }
-
-        /* Filter & Search */
         .filter-bar { display: none; align-items: center; gap: 12px; margin: 20px 0 15px; flex-wrap: wrap; }
         .filter-bar.active { display: flex; }
-        .search-box {
-            flex: 1; min-width: 180px; display: flex; align-items: center;
-            background: #f8fafc; padding: 8px 16px; border-radius: 12px;
-            border: 2px solid #e2e8f0; transition: 0.2s;
-        }
+        .search-box { flex: 1; min-width: 180px; display: flex; align-items: center; background: #f8fafc; padding: 8px 16px; border-radius: 12px; border: 2px solid #e2e8f0; transition: 0.2s; }
         .search-box:focus-within { border-color: #3b82f6; background: #fff; }
-        .search-box input {
-            border: none; background: transparent; outline: none;
-            width: 100%; font-size: 15px; font-family: inherit;
-        }
-        .voter-count {
-            background: #e2e8f0; padding: 6px 18px; border-radius: 50px;
-            font-weight: 600; font-size: 14px; color: #0f172a; white-space: nowrap;
-        }
-
-        /* Voter Cards Grid */
-        .voter-grid {
-            display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 10px;
-        }
+        .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; font-family: inherit; }
+        .voter-count { background: #e2e8f0; padding: 6px 18px; border-radius: 50px; font-weight: 600; font-size: 14px; color: #0f172a; white-space: nowrap; }
+        .voter-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 10px; }
         @media (min-width: 600px) { .voter-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 900px) { .voter-grid { grid-template-columns: repeat(3, 1fr); } }
-
-        .voter-card {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
-            padding: 16px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02); position: relative;
-        }
+        .voter-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 6px rgba(0,0,0,0.02); position: relative; }
         .voter-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-color: #bfdbfe; }
-        .voter-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            opacity: 0; transition: opacity 0.3s ease;
-        }
+        .voter-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); opacity: 0; transition: opacity 0.3s ease; border-radius: 16px 16px 0 0; }
         .voter-card:hover::before { opacity: 1; }
-
         .card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }
         .voter-name { font-size: 17px; font-weight: 700; color: #0f172a; }
         .voter-serial { background: #3b82f6; color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        
         .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 14px; color: #1e293b; }
         .detail { display: flex; flex-direction: column; }
         .detail .label { font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; gap: 4px; }
         .detail .value { font-weight: 500; word-break: break-word; margin-top: 2px; }
         .detail.full-width { grid-column: 1 / -1; }
-
-        .empty-state {
-            grid-column: 1 / -1; text-align: center; padding: 50px 20px;
-            color: #94a3b8;
-        }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: #94a3b8; }
         .empty-state i { font-size: 48px; color: #cbd5e1; margin-bottom: 15px; display: block; }
-
-        @media (max-width: 600px) {
-            .container { padding: 16px; }
-            .brand h1 { font-size: 20px; }
-            .selector-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .voter-card { padding: 12px; }
-        }
+        @media (max-width: 600px) { .container { padding: 16px; } .brand h1 { font-size: 20px; } .selector-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } .voter-card { padding: 12px; } }
     </style>
 </head>
 <body>
@@ -207,7 +119,7 @@
 </div>
 
 <script>
-    // 🔥 আপনার রেন্ডার সার্ভারের সঠিক লিংক
+    // ✅ আপনার Render সার্ভারের সঠিক লিংক
     const API_BASE = 'https://bangladesh-api-cl87.onrender.com/api';
 
     // DOM এলিমেন্ট
@@ -230,15 +142,14 @@
     const voterCount = document.getElementById('voterCount');
     const voterGrid = document.getElementById('voterGrid');
 
-    // স্টেট
+    // স্টেট (ভোটার ডেটা ধরে রাখার জন্য)
     let state = {
         currentVillageId: null,
         fileUrls: { male: null, female: null },
-        voterList: [],
-        filteredVoters: []
+        allVoters: [],
     };
 
-    // হেল্পার
+    // স্টেটাস ও লোডার হেল্পার
     function setStatus(label, type = 'online') {
         statusText.textContent = label;
         statusBadge.className = 'status-badge';
@@ -251,20 +162,12 @@
         skeletonLoader.classList.toggle('active', show);
     }
 
-    function clearSelect(select, placeholder) {
+    function resetSelect(select, placeholder) {
         select.innerHTML = `<option value="">${placeholder}</option>`;
         select.disabled = true;
     }
 
-    function populateSelect(select, items, placeholder) {
-        select.innerHTML = `<option value="">${placeholder}</option>`;
-        items.forEach(item => {
-            select.innerHTML += `<option value="${item.id}">${item.name || item.bn_name}</option>`;
-        });
-        select.disabled = false;
-    }
-
-    // API কল
+    // জেনেরিক API কল ফাংশন (ভুল পাথ ফিক্সড)
     async function apiFetch(endpoint) {
         try {
             const res = await fetch(`${API_BASE}${endpoint}`);
@@ -277,12 +180,17 @@
         }
     }
 
-    // ১. বিভাগ লোড
+    // -------------------------------------------------------
+    // ড্রপডাউন লজিক (১ থেকে ৫ পর্যন্ত চেইন)
+    // -------------------------------------------------------
+
     async function loadDivisions() {
         setStatus('লোড হচ্ছে...', 'loading');
         const data = await apiFetch('/divisions');
         if (data && data.length > 0) {
-            populateSelect(divisionSelect, data, 'বিভাগ নির্বাচন করুন');
+            divisionSelect.innerHTML = `<option value="">বিভাগ নির্বাচন করুন</option>` + 
+                data.map(d => `<option value="${d.id}">${d.bn_name || d.name}</option>`).join('');
+            divisionSelect.disabled = false;
             setStatus('অনলাইন ✅', 'online');
         } else {
             setStatus('অফলাইন ❌', 'offline');
@@ -290,42 +198,61 @@
         }
     }
 
-    // ২. জেলা, উপজেলা, ইউনিয়ন, গ্রাম লোড চেইন
+    // চেইন লোডার (১->২, ২->৩, ...)
     async function loadDistricts(id) {
-        if (!id) { clearSelect(districtSelect, 'প্রথমে বিভাগ নির্বাচন করুন'); resetUI(); return; }
+        if (!id) { resetSelect(districtSelect, 'প্রথমে বিভাগ নির্বাচন করুন'); resetUI(); return; }
         const data = await apiFetch(`/divisions/${id}`);
-        if (data) populateSelect(districtSelect, data.districts || [], 'জেলা নির্বাচন করুন');
-        clearSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন');
-        clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
-        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        if (data && data.districts) {
+            districtSelect.innerHTML = `<option value="">জেলা নির্বাচন করুন</option>` + 
+                data.districts.map(d => `<option value="${d.id}">${d.bn_name || d.name}</option>`).join('');
+            districtSelect.disabled = false;
+        }
+        resetSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন');
+        resetSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
+        resetSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
         resetUI();
     }
 
     async function loadUpazilas(id) {
-        if (!id) { clearSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন'); resetUI(); return; }
+        if (!id) { resetSelect(upazilaSelect, 'প্রথমে জেলা নির্বাচন করুন'); resetUI(); return; }
         const data = await apiFetch(`/districts/${id}`);
-        if (data) populateSelect(upazilaSelect, data.upazilas || [], 'উপজেলা নির্বাচন করুন');
-        clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
-        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        if (data && data.upazilas) {
+            upazilaSelect.innerHTML = `<option value="">উপজেলা নির্বাচন করুন</option>` + 
+                data.upazilas.map(u => `<option value="${u.id}">${u.bn_name || u.name}</option>`).join('');
+            upazilaSelect.disabled = false;
+        }
+        resetSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন');
+        resetSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
         resetUI();
     }
 
     async function loadUnions(id) {
-        if (!id) { clearSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন'); resetUI(); return; }
+        if (!id) { resetSelect(unionSelect, 'প্রথমে উপজেলা নির্বাচন করুন'); resetUI(); return; }
         const data = await apiFetch(`/upazilas/${id}`);
-        if (data) populateSelect(unionSelect, data.unions || [], 'ইউনিয়ন নির্বাচন করুন');
-        clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
+        if (data && data.unions) {
+            unionSelect.innerHTML = `<option value="">ইউনিয়ন নির্বাচন করুন</option>` + 
+                data.unions.map(u => `<option value="${u.id}">${u.bn_name || u.name}</option>`).join('');
+            unionSelect.disabled = false;
+        }
+        resetSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন');
         resetUI();
     }
 
     async function loadVillages(id) {
-        if (!id) { clearSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন'); resetUI(); return; }
+        if (!id) { resetSelect(villageSelect, 'প্রথমে ইউনিয়ন নির্বাচন করুন'); resetUI(); return; }
         const data = await apiFetch(`/unions/${id}`);
-        if (data) populateSelect(villageSelect, data.villages || [], 'গ্রাম নির্বাচন করুন');
+        if (data && data.villages) {
+            villageSelect.innerHTML = `<option value="">গ্রাম নির্বাচন করুন</option>` + 
+                data.villages.map(v => `<option value="${v.id}">${v.bn_name || v.name}</option>`).join('');
+            villageSelect.disabled = false;
+        }
         resetUI();
     }
 
-    // ৩. গ্রামের বিস্তারিত (Population ফাইলের লিংক পেতে)
+    // -------------------------------------------------------
+    // ভোটার ডেটা লোড করার লজিক (মূল ফিক্স এখানে)
+    // -------------------------------------------------------
+
     async function loadVillageDetails(id) {
         resetUI();
         if (!id) return;
@@ -335,48 +262,49 @@
         showLoader(false);
 
         if (data && data.population_files) {
+            // ✅ আপনার দেওয়া জনশন ফাইলের পাথ সেট করা হচ্ছে
             state.fileUrls = data.population_files;
             genderBox.classList.add('active');
             genderSelect.value = '';
+            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>লিঙ্গ নির্বাচন করুন</h3><p>ভোটার তালিকা দেখতে উপরের ড্রপডাউন থেকে লিঙ্গ বাছাই করুন।</p></div>`;
         } else {
             voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-database"></i><h3>ডেটা পাওয়া যায়নি</h3><p>এই গ্রামের জন্য ভোটার তালিকা পাওয়া যায়নি।</p></div>`;
         }
     }
 
-    function resetUI() {
-        genderBox.classList.remove('active');
-        metaCard.classList.remove('active');
-        filterBar.classList.remove('active');
-        voterGrid.innerHTML = '';
-        voterCount.textContent = 'মোট: ০ জন';
-        state.voterList = [];
-        state.fileUrls = { male: null, female: null };
-        genderSelect.value = '';
-    }
-
-    // ৪. জেন্ডার সিলেক্ট করলে ভোটার ডেটা লোড হবে
+    // জেন্ডার সিলেক্ট করলে ডেটা লোড হবে (কোর ফিক্স)
     genderSelect.addEventListener('change', async function() {
         const gender = this.value;
-        if (!gender || !state.fileUrls[gender]) return;
+        const filePath = state.fileUrls[gender];
+        
+        if (!gender || !filePath) return;
 
         showLoader(true);
-        // 🔥 সার্ভার থেকে সরাসরি JSON ফাইল লোড হবে (আপনার এক্সাক্ট পাথে)
-        const data = await apiFetch(state.fileUrls[gender]);
+        
+        // 🔥 ফিক্স: সরাসরি পাথটি থেকে শুধু ID নিচ্ছি
+        // উদাহরণ: "population/male/vil_802020101.json" -> "vil_802020101"
+        const id = filePath.replace(/^.*[\/\\]/, '').replace('.json', '');
+        
+        // নতুন API পাথে কল করছি: /api/population/male/vil_802020101
+        const data = await apiFetch(`/population/${gender}/${id}`);
         showLoader(false);
 
-        if (data) {
-            state.voterList = data.voters || [];
+        if (data && data.voters) {
+            state.allVoters = data.voters;
             renderUI(data);
         } else {
-            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><h3>ভোটার পাওয়া যায়নি!</h3><p>এই লিঙ্গের জন্য ফাইলটি খুঁজে পাওয়া যায়নি।</p></div>`;
+            voterGrid.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><h3>ভোটার পাওয়া যায়নি!</h3><p>এই লিঙ্গের জন্য ভোটার ফাইল খুঁজে পাওয়া যায়নি।</p></div>`;
             metaCard.classList.remove('active');
             filterBar.classList.remove('active');
         }
     });
 
-    // ৫. রেন্ডার ফাংশন (মেটা + কার্ড)
+    // -------------------------------------------------------
+    // রেন্ডারিং এবং সার্চ ফিল্টার
+    // -------------------------------------------------------
+
     function renderUI(data) {
-        // মেটা ডেটা
+        // মেটা ডেটা (যদি থাকে)
         if (data.meta) {
             metaCard.classList.add('active');
             metaGrid.innerHTML = `
@@ -389,7 +317,7 @@
 
         filterBar.classList.add('active');
         searchInput.value = '';
-        renderGrid(state.voterList);
+        renderGrid(state.allVoters);
     }
 
     function renderGrid(list) {
@@ -422,26 +350,39 @@
         voterCount.textContent = `মোট: ${list.length} জন`;
     }
 
-    // ৬. সার্চ
+    function resetUI() {
+        genderBox.classList.remove('active');
+        metaCard.classList.remove('active');
+        filterBar.classList.remove('active');
+        voterGrid.innerHTML = '';
+        voterCount.textContent = 'মোট: ০ জন';
+        state.allVoters = [];
+        state.fileUrls = { male: null, female: null };
+        genderSelect.value = '';
+    }
+
+    // লাইভ সার্চ ফিল্টার
     searchInput.addEventListener('input', function() {
         const query = this.value.trim().toLowerCase();
-        if (!query) { renderGrid(state.voterList); return; }
+        if (!query) { renderGrid(state.allVoters); return; }
         
-        const filtered = state.voterList.filter(v => 
+        const filtered = state.allVoters.filter(v => 
             (v.name || '').toLowerCase().includes(query) || 
             (v.voter_id || '').toLowerCase().includes(query)
         );
         renderGrid(filtered);
     });
 
-    // ইভেন্ট লিসেনার
+    // -------------------------------------------------------
+    // ইভেন্ট লিসেনার ও অ্যাপ স্টার্ট
+    // -------------------------------------------------------
+
     divisionSelect.addEventListener('change', function() { loadDistricts(this.value); });
     districtSelect.addEventListener('change', function() { loadUpazilas(this.value); });
     upazilaSelect.addEventListener('change', function() { loadUnions(this.value); });
     unionSelect.addEventListener('change', function() { loadVillages(this.value); });
     villageSelect.addEventListener('change', function() { loadVillageDetails(this.value); });
 
-    // অ্যাপ স্টার্ট
     loadDivisions();
 </script>
 </body>
