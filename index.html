@@ -3,636 +3,145 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল API</title>
+    <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল সার্চ ইঞ্জিন</title>
     
-    <!-- প্রফেশনাল ফন্ট (Hind Siliguri + Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
     <style>
         /* ===== রিসেট ও বেসিক ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Hind Siliguri', 'Inter', sans-serif;
-            background: #f8fafc;
-            min-height: 100vh;
-            padding: 0;
-            overflow-x: hidden; /* মোবাইলে ডানে-বামে স্ক্রোল বন্ধ */
-            width: 100%;
-            max-width: 100vw;
-            color: #0f172a;
-        }
-
-        /* ===== কন্টেইনার ===== */
-        .app-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 16px 80px 16px;
-            width: 100%;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Hind Siliguri', 'Inter', sans-serif; background: #f8fafc; min-height: 100vh; padding: 0; overflow-x: hidden; width: 100%; max-width: 100vw; color: #0f172a; }
+        
+        .app-container { max-width: 1200px; margin: 0 auto; padding: 16px 16px 80px 16px; width: 100%; }
 
         /* ===== হেডার ===== */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0 16px 0;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-left .flag {
-            font-size: 32px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-
-        .header-left h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1.2;
-            letter-spacing: -0.5px;
-        }
-
-        .header-left h1 small {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            color: #64748b;
-            letter-spacing: 0;
-        }
-
-        .status-badge {
-            background: #10b981;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
-            transition: all 0.3s ease;
-        }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 16px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-left .flag { font-size: 32px; line-height: 1; }
+        .header-left h1 { font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.2; letter-spacing: -0.5px; }
+        .header-left h1 small { display: block; font-size: 12px; font-weight: 400; color: #64748b; }
+        .status-badge { background: #10b981; color: #fff; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2); transition: all 0.3s ease; }
         .status-badge i { font-size: 10px; }
-        .status-badge.offline { background: #ef4444; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2); }
-        .status-badge.loading { background: #f59e0b; color: #0f172a; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2); }
+        .status-badge.offline { background: #ef4444; }
+        .status-badge.loading { background: #f59e0b; color: #0f172a; }
 
-        /* ===== সিলেক্টর (মোবাইল ফ্রেন্ডলি) ===== */
-        .selector-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        @media (min-width: 640px) {
-            .selector-group { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-        }
-
-        .selector-group select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            font-size: 14px;
-            font-family: 'Hind Siliguri', sans-serif;
-            background: #ffffff;
-            color: #0f172a;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
-        .selector-group select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        }
-        .selector-group select:disabled {
-            background-color: #f1f5f9;
-            color: #94a3b8;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
+        /* ===== সিলেক্টর ===== */
+        .selector-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        @media (min-width: 640px) { .selector-group { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
+        .selector-group select { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 14px; font-size: 14px; font-family: 'Hind Siliguri', sans-serif; background: #ffffff; color: #0f172a; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
+        .selector-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .selector-group select:disabled { background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; opacity: 0.8; }
 
         /* ===== লোডিং ===== */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 40px 0;
-        }
+        .loading-spinner { display: none; text-align: center; padding: 40px 0; }
         .loading-spinner.active { display: block; }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
-        }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-spinner p { color: #64748b; font-size: 14px; }
 
-        /* ===== জেন্ডার সিলেক্ট ===== */
-        .gender-select-group {
-            display: none;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px dashed #e2e8f0;
-            animation: fadeUp 0.4s ease;
-        }
+        /* ===== জেন্ডার ===== */
+        .gender-select-group { display: none; margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0; animation: fadeUp 0.4s ease; }
         .gender-select-group.active { display: block; }
-        .gender-select-group select {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            display: block;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            font-size: 16px;
-            font-family: 'Hind Siliguri', sans-serif;
-            background: #fff;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 40px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .gender-select-group select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        }
+        .gender-select-group select { width: 100%; max-width: 400px; margin: 0 auto; display: block; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 16px; font-size: 16px; font-family: 'Hind Siliguri', sans-serif; background: #fff; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; transition: all 0.2s; cursor: pointer; }
+        .gender-select-group select:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
 
-        /* ===== মেটা কার্ড (গ্লাস ইফেক্ট) ===== */
-        .meta-card {
-            display: none;
-            background: rgba(239, 246, 255, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 20px;
-            padding: 16px 20px;
-            margin-top: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-left: 6px solid #3b82f6;
-            animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+        /* ===== মেটা কার্ড ===== */
+        .meta-card { display: none; background: rgba(239, 246, 255, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; padding: 16px 20px; margin-top: 16px; border: 1px solid rgba(59, 130, 246, 0.2); border-left: 6px solid #3b82f6; animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
         .meta-card.active { display: block; }
-        .meta-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        @media (min-width: 640px) {
-            .meta-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-        }
-        .meta-item {
-            background: #ffffff;
-            padding: 8px 12px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .meta-item .meta-label {
-            font-size: 11px;
-            color: #64748b;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .meta-item .meta-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: #0f172a;
-            margin-top: 2px;
-        }
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (min-width: 640px) { .meta-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } }
+        .meta-item { background: #ffffff; padding: 8px 12px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .meta-item .meta-label { font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .meta-item .meta-value { font-size: 15px; font-weight: 600; color: #0f172a; margin-top: 2px; }
         .meta-item.full-width { grid-column: 1 / -1; }
 
-        /* ===== সার্চ ফিল্টার ===== */
-        .filter-section {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-            animation: fadeUp 0.4s ease;
-        }
-        .filter-section .search-wrapper {
-            flex: 1;
-            min-width: 150px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #fff;
-            padding: 4px 4px 4px 16px;
-            border-radius: 30px;
-            border: 1.5px solid #e2e8f0;
-            transition: all 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .filter-section .search-wrapper:focus-within {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        }
+        /* ===== সার্চ ফিল্টার (হাইলাইট ইঞ্জিন) ===== */
+        .filter-section { display: none; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease; }
+        .filter-section .search-wrapper { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: #fff; padding: 4px 4px 4px 16px; border-radius: 30px; border: 1.5px solid #e2e8f0; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .filter-section .search-wrapper:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
         .filter-section .search-wrapper i { color: #94a3b8; font-size: 14px; }
-        .filter-section .search-wrapper input {
-            border: none;
-            background: transparent;
-            outline: none;
-            font-size: 15px;
-            font-family: 'Hind Siliguri', sans-serif;
-            width: 100%;
-            padding: 10px 10px 10px 0;
-            color: #0f172a;
-        }
+        .filter-section .search-wrapper input { border: none; background: transparent; outline: none; font-size: 15px; font-family: 'Hind Siliguri', sans-serif; width: 100%; padding: 10px 10px 10px 0; color: #0f172a; }
         .filter-section .search-wrapper input::placeholder { color: #94a3b8; }
-        
-        .filter-section .voter-count {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0f172a;
-            background: #f1f5f9;
-            padding: 8px 18px;
-            border-radius: 30px;
-            white-space: nowrap;
-        }
+        .filter-section .voter-count { font-size: 14px; font-weight: 600; color: #0f172a; background: #f1f5f9; padding: 8px 18px; border-radius: 30px; white-space: nowrap; }
 
-        /* ===== ভোটার গ্রিড (মোবাইলে ১ কলাম) ===== */
-        .voter-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        @media (min-width: 600px) {
-            .voter-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (min-width: 900px) {
-            .voter-grid { grid-template-columns: 1fr 1fr 1fr; }
-        }
+        /* ===== ভোটার গ্রিড ===== */
+        .voter-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
+        @media (min-width: 600px) { .voter-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 900px) { .voter-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
         /* ===== প্রফেশনাল ভোটার কার্ড ===== */
-        .voter-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 20px 18px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            animation: fadeUp 0.6s ease backwards;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            /* মোবাইলে হোভার নাই, তবে ট্যাপে রিয়াক্ট করবে */
-        }
-        .voter-card:active {
-            transform: scale(0.98);
-            background: #f8fafc;
-        }
-        /* ডেস্কটপে হোভার */
-        @media (hover: hover) {
-            .voter-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                border-color: #93c5fd;
-            }
-        }
+        .voter-card { background: #ffffff; border-radius: 24px; padding: 20px 18px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid rgba(226, 232, 240, 0.8); transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); animation: fadeUp 0.6s ease backwards; position: relative; display: flex; flex-direction: column; }
+        .voter-card:active { transform: scale(0.98); background: #f8fafc; }
+        @media (hover: hover) { .voter-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #93c5fd; } }
 
-        .voter-card .voter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 14px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 12px;
-        }
-        .voter-card .voter-header .voter-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1.3;
-            letter-spacing: -0.3px;
-        }
-        .voter-card .voter-header .voter-serial {
-            background: #3b82f6;
-            color: #fff;
-            padding: 2px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-            height: fit-content;
-        }
+        .voter-card .voter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
+        .voter-card .voter-header .voter-name { font-size: 18px; font-weight: 700; color: #0f172a; line-height: 1.3; letter-spacing: -0.3px; }
+        .voter-card .voter-header .voter-serial { background: #3b82f6; color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; height: fit-content; }
         
-        .voter-card .voter-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 12px;
-            flex-grow: 1;
-        }
-        .voter-card .voter-body .detail {
-            font-size: 14px;
-            color: #334155;
-        }
-        .voter-card .voter-body .detail .label {
-            font-weight: 500;
-            color: #94a3b8;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .voter-card .voter-body .detail .value {
-            font-weight: 600;
-            color: #0f172a;
-            margin-top: 2px;
-            word-break: break-word;
-        }
-        .voter-card .voter-body .detail.full-width {
-            grid-column: 1 / -1;
-        }
+        .voter-card .voter-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; flex-grow: 1; }
+        .voter-card .voter-body .detail { font-size: 14px; color: #334155; }
+        .voter-card .voter-body .detail .label { font-weight: 500; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .voter-card .voter-body .detail .value { font-weight: 600; color: #0f172a; margin-top: 2px; word-break: break-word; }
+        .voter-card .voter-body .detail.full-width { grid-column: 1 / -1; }
 
-        /* ===== কার্ড অ্যাকশন বাটন (মোবাইলের জন্য বড় টাচ এরিয়া) ===== */
-        .voter-card .card-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 14px;
-            justify-content: flex-end;
-        }
-        .voter-card .card-actions button {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            padding: 10px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Hind Siliguri', sans-serif;
-            flex: 1;
-            min-height: 44px; /* মোবাইলের জন্য টার্গেট সাইজ */
-            touch-action: manipulation;
-        }
-        .voter-card .card-actions button:active {
-            background: #f1f5f9;
-            transform: scale(0.95);
-        }
+        /* ===== সার্চ হাইলাইট ইফেক্ট ===== */
+        .highlight { background-color: #fef08a; padding: 0 2px; border-radius: 4px; font-weight: 700; color: #0f172a; }
+
+        /* ===== কার্ড অ্যাকশন বাটন ===== */
+        .voter-card .card-actions { display: flex; gap: 10px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 14px; justify-content: flex-end; }
+        .voter-card .card-actions button { background: #ffffff; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 30px; font-size: 14px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Hind Siliguri', sans-serif; flex: 1; min-height: 44px; touch-action: manipulation; }
+        .voter-card .card-actions button:active { background: #f1f5f9; transform: scale(0.95); }
         .voter-card .card-actions button i { font-size: 15px; }
 
-        /* ===== লোড মোর (ইনফিনিট স্ক্রোল ফলব্যাক) ===== */
-        .load-more-container {
-            text-align: center;
-            margin-top: 24px;
-            padding: 10px;
-            display: none;
-        }
-        .load-more-btn {
-            padding: 14px 40px;
-            background: #3b82f6;
-            color: #fff;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Hind Siliguri', sans-serif;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            touch-action: manipulation;
-            min-height: 48px;
-        }
+        /* ===== লোড মোর ===== */
+        .load-more-container { text-align: center; margin-top: 24px; padding: 10px; display: none; }
+        .load-more-btn { padding: 14px 40px; background: #3b82f6; color: #fff; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Hind Siliguri', sans-serif; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); touch-action: manipulation; min-height: 48px; }
         .load-more-btn:active { transform: scale(0.95); }
         .load-more-btn:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; }
 
-        /* ===== প্রফেশনাল মডাল (মোবাইলের জন্য বটম শীট) ===== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: none;
-            align-items: flex-end; /* মোবাইলে নিচ থেকে উঠে আসবে */
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-        @media (min-width: 600px) {
-            .modal-overlay { align-items: center; }
-        }
+        /* ===== মডাল (বটম শীট) ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: flex-end; justify-content: center; animation: fadeIn 0.3s ease; }
+        @media (min-width: 600px) { .modal-overlay { align-items: center; } }
         .modal-overlay.active { display: flex; }
 
-        .modal-box {
-            background: #ffffff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 24px 24px 0 0;
-            padding: 24px 20px 20px 20px;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        @media (min-width: 600px) {
-            .modal-box {
-                border-radius: 24px;
-                box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-                animation: scaleUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            }
-        }
+        .modal-box { background: #ffffff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 24px 20px 20px 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        @media (min-width: 600px) { .modal-box { border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); animation: scaleUp 0.3s cubic-bezier(0.22, 1, 0.36, 1); } }
 
-        .modal-box .modal-handle {
-            width: 40px;
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 10px;
-            margin: 0 auto 16px auto;
-            display: block;
-        }
-        @media (min-width: 600px) {
-            .modal-box .modal-handle { display: none; }
-        }
+        .modal-box .modal-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 16px auto; display: block; }
+        @media (min-width: 600px) { .modal-box .modal-handle { display: none; } }
 
-        .modal-box h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .modal-box h3 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
 
-        .modal-box .modal-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .modal-box .modal-options label {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 14px;
-            background: #f8fafc;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 15px;
-            color: #334155;
-            font-weight: 500;
-        }
+        .modal-box .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .modal-box .modal-options label { display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s; font-size: 15px; color: #334155; font-weight: 500; }
         .modal-box .modal-options label:active { background: #eff6ff; border-color: #3b82f6; }
-        .modal-box .modal-options input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #3b82f6;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .modal-box .modal-options input[type="checkbox"] { width: 20px; height: 20px; accent-color: #3b82f6; cursor: pointer; flex-shrink: 0; }
 
-        /* ডাউনলোড গ্রিড (মোবাইলে ২ কলাম) */
-        .download-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .download-grid button {
-            padding: 14px 8px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            background: #f8fafc;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1e293b;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Hind Siliguri', sans-serif;
-            min-height: 48px;
-            touch-action: manipulation;
-        }
-        .download-grid button:active {
-            background: #eff6ff;
-            border-color: #3b82f6;
-            transform: scale(0.95);
-        }
+        .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .download-grid button { padding: 14px 8px; border: 1.5px solid #e2e8f0; border-radius: 14px; background: #f8fafc; cursor: pointer; font-size: 13px; font-weight: 600; color: #1e293b; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Hind Siliguri', sans-serif; min-height: 48px; touch-action: manipulation; }
+        .download-grid button:active { background: #eff6ff; border-color: #3b82f6; transform: scale(0.95); }
         .download-grid button i { font-size: 16px; color: #3b82f6; }
 
-        /* মডাল বাটন */
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 4px;
-        }
-        .modal-actions button {
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            font-family: 'Hind Siliguri', sans-serif;
-            min-height: 44px;
-            touch-action: manipulation;
-        }
-        .modal-actions .btn-cancel {
-            background: #f1f5f9;
-            color: #475569;
-        }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
+        .modal-actions button { padding: 10px 24px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: 'Hind Siliguri', sans-serif; min-height: 44px; touch-action: manipulation; }
+        .modal-actions .btn-cancel { background: #f1f5f9; color: #475569; }
         .modal-actions .btn-cancel:active { background: #e2e8f0; }
-        .modal-actions .btn-primary {
-            background: #3b82f6;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
+        .modal-actions .btn-primary { background: #3b82f6; color: #fff; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
         .modal-actions .btn-primary:active { transform: scale(0.95); }
 
-        /* ===== টোস্ট মেসেজ ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0f172a;
-            color: #fff;
-            padding: 14px 24px;
-            border-radius: 40px;
-            font-size: 15px;
-            font-weight: 500;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            animation: slideUp 0.4s ease;
-            font-family: 'Hind Siliguri', sans-serif;
-            width: calc(100% - 40px);
-            max-width: 400px;
-            justify-content: center;
-            text-align: center;
-        }
+        /* ===== টোস্ট ===== */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 14px 24px; border-radius: 40px; font-size: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; display: none; align-items: center; gap: 10px; animation: slideUp 0.4s ease; font-family: 'Hind Siliguri', sans-serif; width: calc(100% - 40px); max-width: 400px; justify-content: center; text-align: center; }
         .toast.show { display: flex; }
 
         /* ===== অ্যানিমেশন ===== */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes scaleUp {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ===== স্ক্রলবার স্টাইল (সুন্দর করে) ===== */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -681,11 +190,11 @@
             <div class="meta-grid" id="metaGrid"></div>
         </div>
 
-        <!-- সার্চ ফিল্টার -->
+        <!-- সার্চ ফিল্টার (হাইলাইট সহ) -->
         <div class="filter-section" id="filterSection">
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="নাম বা আইডি দিয়ে খুঁজুন..." />
+                <input type="text" id="searchInput" placeholder="নাম, আইডি, পিতা, মাতা, ঠিকানা, পেশা দিয়ে খুঁজুন..." />
             </div>
             <div class="voter-count" id="voterCount">মোট: ০</div>
         </div>
@@ -693,13 +202,13 @@
         <!-- ভোটার গ্রিড -->
         <div class="voter-grid" id="voterGrid"></div>
 
-        <!-- লোড মোর বাটন (প্যাজিনেশন) -->
+        <!-- লোড মোর বাটন -->
         <div class="load-more-container" id="loadMoreContainer">
             <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreVoters()">আরও লোড করুন</button>
         </div>
     </div>
 
-    <!-- ===== কপি মডাল (পপআপ) ===== -->
+    <!-- ===== কপি মডাল ===== -->
     <div class="modal-overlay" id="copyModal" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="modal-handle"></span>
@@ -718,7 +227,7 @@
         </div>
     </div>
 
-    <!-- ===== ডাউনলোড মডাল (পপআপ) ===== -->
+    <!-- ===== ডাউনলোড মডাল ===== -->
     <div class="modal-overlay" id="downloadModal" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="modal-handle"></span>
@@ -748,7 +257,7 @@
 
     <script>
         // ================================================================
-        //  কনফিগারেশন (আপনার সঠিক Render লিংক)
+        //  কনফিগারেশন
         // ================================================================
         const API_BASE = 'https://bangladesh-api-2.onrender.com/api'; // আপনার API লিংক
 
@@ -781,8 +290,9 @@
         let state = { 
             allVoters: [], 
             filteredVoters: [], 
-            displayLimit: 30, // একবারে কতগুলো লোড হবে
-            currentCardData: null 
+            displayLimit: 30, 
+            currentCardData: null,
+            currentSearchQuery: ''
         };
 
         // ================================================================
@@ -908,9 +418,12 @@
                 const response = await fetch(`${API_BASE}/population/${gender}/${state.currentVillageData.id}`);
                 if (!response.ok) throw new Error('ফাইল লোড করতে ব্যর্থ');
                 const json = await response.json();
+                
+                // JSON থেকে ১০০% ডেটা সঠিকভাবে নেওয়া
                 state.allVoters = json.data.voters || [];
                 state.filteredVoters = [...state.allVoters];
                 state.displayLimit = 30;
+                state.currentSearchQuery = '';
                 
                 renderMeta(json.data.meta);
                 renderVoterCards();
@@ -924,7 +437,7 @@
         }
 
         // ================================================================
-        //  রেন্ডার ফাংশন (মেটা, কার্ড, প্যাজিনেশন)
+        //  রেন্ডার ফাংশন (মেটা + কার্ড + হাইলাইট)
         // ================================================================
         function renderMeta(meta) {
             if (!meta) { metaCard.classList.remove('active'); return; }
@@ -942,8 +455,20 @@
             `;
         }
 
+        // টেক্সট হাইলাইট করার ফাংশন
+        function highlightText(text, query) {
+            if (!text || !query || query.trim() === '') return text;
+            try {
+                const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            } catch (e) {
+                return text;
+            }
+        }
+
         function renderVoterCards() {
             const toShow = state.filteredVoters.slice(0, state.displayLimit);
+            const query = state.currentSearchQuery.trim();
             
             if (toShow.length === 0) {
                 voterGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b; font-size:16px; font-weight:500;">
@@ -957,19 +482,29 @@
             let html = '';
             toShow.forEach((voter, index) => {
                 const serial = voter.serial || index + 1;
+                
+                // শুধুমাত্র মিলে যাওয়া টেক্সটগুলো হাইলাইট করা
+                const nameHtml = highlightText(voter.name || '—', query);
+                const idHtml = highlightText(voter.voter_id || '—', query);
+                const fatherHtml = highlightText(voter.father || '—', query);
+                const motherHtml = highlightText(voter.mother || '—', query);
+                const dobHtml = highlightText(voter.date_of_birth || '—', query);
+                const occHtml = highlightText(voter.occupation || '—', query);
+                const addrHtml = highlightText(voter.address || '—', query);
+
                 html += `
                     <div class="voter-card" style="animation-delay: ${(index % 10) * 0.05}s">
                         <div class="voter-header">
-                            <div class="voter-name">${voter.name || '—'}</div>
+                            <div class="voter-name">${nameHtml}</div>
                             <div class="voter-serial">#${serial}</div>
                         </div>
                         <div class="voter-body">
-                            <div class="detail"><div class="label">ভোটার আইডি</div><div class="value">${voter.voter_id || '—'}</div></div>
-                            <div class="detail"><div class="label">পিতা</div><div class="value">${voter.father || '—'}</div></div>
-                            <div class="detail"><div class="label">মাতা</div><div class="value">${voter.mother || '—'}</div></div>
-                            <div class="detail"><div class="label">জন্ম তারিখ</div><div class="value">${voter.date_of_birth || '—'}</div></div>
-                            <div class="detail full-width"><div class="label">পেশা</div><div class="value">${voter.occupation || '—'}</div></div>
-                            <div class="detail full-width"><div class="label">ঠিকানা</div><div class="value">${voter.address || '—'}</div></div>
+                            <div class="detail"><div class="label">ভোটার আইডি</div><div class="value">${idHtml}</div></div>
+                            <div class="detail"><div class="label">পিতা</div><div class="value">${fatherHtml}</div></div>
+                            <div class="detail"><div class="label">মাতা</div><div class="value">${motherHtml}</div></div>
+                            <div class="detail"><div class="label">জন্ম তারিখ</div><div class="value">${dobHtml}</div></div>
+                            <div class="detail full-width"><div class="label">পেশা</div><div class="value">${occHtml}</div></div>
+                            <div class="detail full-width"><div class="label">ঠিকানা</div><div class="value">${addrHtml}</div></div>
                         </div>
                         <div class="card-actions">
                             <button onclick="openCopyModal(${index})"><i class="fas fa-copy"></i> কপি</button>
@@ -981,7 +516,6 @@
             voterGrid.innerHTML = html;
             updateVoterCount(state.filteredVoters.length);
 
-            // লোড মোর বাটন লজিক
             if (state.filteredVoters.length > state.displayLimit) {
                 loadMoreContainer.style.display = 'block';
                 loadMoreBtn.disabled = false;
@@ -999,22 +533,39 @@
         function updateVoterCount(count) { voterCount.textContent = `মোট: ${count}`; }
 
         // ================================================================
-        //  সার্চ ফিল্টার
+        //  হাই-পারফরম্যান্স প্রফেশনাল সার্চ ইঞ্জিন
         // ================================================================
         searchInput.addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
-            if (!state.allVoters.length) return;
+            const query = this.value.trim();
+            state.currentSearchQuery = query;
             
-            state.filteredVoters = state.allVoters.filter(voter => 
-                (voter.name || '').toLowerCase().includes(query) || 
-                (voter.voter_id || '').toLowerCase().includes(query)
-            );
+            if (!state.allVoters.length) return;
+            if (query === '') {
+                state.filteredVoters = [...state.allVoters];
+            } else {
+                const lowerQuery = query.toLowerCase();
+                state.filteredVoters = state.allVoters.filter(voter => {
+                    // সব ফিল্ড একসাথে সার্চ করা (JSON এর সব ডেটা দিয়ে)
+                    return (
+                        (voter.serial && String(voter.serial).toLowerCase().includes(lowerQuery)) ||
+                        (voter.name && voter.name.toLowerCase().includes(lowerQuery)) ||
+                        (voter.name_en && voter.name_en.toLowerCase().includes(lowerQuery)) ||
+                        (voter.voter_id && voter.voter_id.toLowerCase().includes(lowerQuery)) ||
+                        (voter.father && voter.father.toLowerCase().includes(lowerQuery)) ||
+                        (voter.mother && voter.mother.toLowerCase().includes(lowerQuery)) ||
+                        (voter.date_of_birth && voter.date_of_birth.toLowerCase().includes(lowerQuery)) ||
+                        (voter.occupation && voter.occupation.toLowerCase().includes(lowerQuery)) ||
+                        (voter.address && voter.address.toLowerCase().includes(lowerQuery))
+                    );
+                });
+            }
+            
             state.displayLimit = 30;
             renderVoterCards();
         });
 
         // ================================================================
-        //  ইভেন্ট লিসেনার (সিলেক্ট চেঞ্জ)
+        //  ইভেন্ট লিসেনার
         // ================================================================
         divisionSelect.addEventListener('change', function() { loadDistricts(this.value); });
         districtSelect.addEventListener('change', function() { loadUpazilas(this.value); });
@@ -1027,7 +578,7 @@
         });
 
         // ================================================================
-        //  ইউটিলিটি ফাংশন (UI রিসেট)
+        //  ইউটিলিটি ফাংশন
         // ================================================================
         function resetUI() {
             metaCard.classList.remove('active');
@@ -1036,6 +587,7 @@
             loadMoreContainer.style.display = 'none';
             state.allVoters = [];
             state.filteredVoters = [];
+            state.currentSearchQuery = '';
         }
 
         function resetAllSelects() {
@@ -1053,7 +605,7 @@
         }
 
         // ================================================================
-        //  কপি ফাংশনালিটি (প্রফেশনাল মডাল)
+        //  কপি ফাংশনালিটি
         // ================================================================
         function openCopyModal(index) {
             state.currentCardData = state.filteredVoters[index];
@@ -1091,7 +643,6 @@
                 showToast('✅ সফলভাবে কপি করা হয়েছে!');
                 closeModalById('copyModal');
             }).catch(() => {
-                // Fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = textToCopy.trim();
                 document.body.appendChild(textarea);
@@ -1104,7 +655,7 @@
         }
 
         // ================================================================
-        //  ডাউনলোড ফাংশনালিটি (১০টি ফরম্যাট)
+        //  ডাউনলোড ফাংশনালিটি
         // ================================================================
         function openDownloadModal(index) {
             state.currentCardData = state.filteredVoters[index];
@@ -1136,14 +687,9 @@
                 case 'md':
                     content = `# ${data.name || '—'}\n\n- **ভোটার আইডি:** ${data.voter_id || '—'}\n- **পিতা:** ${data.father || '—'}\n- **মাতা:** ${data.mother || '—'}\n- **জন্ম তারিখ:** ${data.date_of_birth || '—'}\n- **পেশা:** ${data.occupation || '—'}\n- **ঠিকানা:** ${data.address || '—'}`;
                     filename += '.md'; break;
-                case 'pdf':
+                case 'pdf': case 'png':
                     closeModalById('downloadModal');
-                    window.print(); // ব্রাউজারের প্রিন্ট ডায়ালগ
-                    return;
-                case 'png':
-                    closeModalById('downloadModal');
-                    window.print(); // ব্রাউজার প্রিন্ট -> Save as PDF/Image
-                    return;
+                    window.print(); return;
                 case 'doc':
                     content = `<html><body><h1>${data.name || ''}</h1><table border="1" cellpadding="8"><tr><td>Voter ID</td><td>${data.voter_id || ''}</td></tr><tr><td>Father</td><td>${data.father || ''}</td></tr><tr><td>Mother</td><td>${data.mother || ''}</td></tr><tr><td>DOB</td><td>${data.date_of_birth || ''}</td></tr><tr><td>Occupation</td><td>${data.occupation || ''}</td></tr><tr><td>Address</td><td>${data.address || ''}</td></tr></table></body></html>`;
                     filename += '.doc'; break;
@@ -1153,7 +699,6 @@
                 default: return;
             }
 
-            // ফাইল ডাউনলোড
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
