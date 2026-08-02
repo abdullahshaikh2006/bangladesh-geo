@@ -843,6 +843,62 @@
         // ================================================================
         loadDivisions();
 
+
+
+
+
+
+
+
+
+
+
+
+        // গ্রাম সিলেক্ট করলে
+const loadVillage = async (villageId) => {
+    setLoading(true);
+    try {
+        const response = await fetch(`/api/villages/${villageId}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const village = result.data;
+            
+            // গ্রামের মৌলিক তথ্য
+            console.log('গ্রামের নাম:', village.name);
+            console.log('বাংলা নাম:', village.bn_name);
+            console.log('মোট জনসংখ্যা:', village.population);
+            console.log('পরিবার:', village.statistics.households);
+            
+            // পুরুষ জনশন
+            if (village.population_data.male) {
+                console.log('পুরুষ总数:', village.population_data.male.population.total);
+                console.log('পুরুষের বয়সভিত্তিক:', village.population_data.male.population.age_groups);
+            }
+            
+            // মহিলা জনশন
+            if (village.population_data.female) {
+                console.log('মহিলা总数:', village.population_data.female.population.total);
+                console.log('মহিলার বয়সভিত্তিক:', village.population_data.female.population.age_groups);
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    setLoading(false);
+};
+
+
+
+        
+
+
+
+
+
+
+        
+
         console.log('🇧🇩 বাংলাদেশ লোকেশন API ডেমো লোড হয়েছে!');
         console.log(`🔗 API বেস URL: ${API_BASE}`);
     </script>
