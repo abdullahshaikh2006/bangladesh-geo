@@ -73,6 +73,14 @@
         .accessibility-btn { background: var(--card-bg); border: 1px solid var(--border); border-radius: 30px; padding: 8px 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); transition: all 0.3s; font-family: inherit; box-shadow: var(--shadow); }
         .accessibility-btn:active { transform: scale(0.95); }
 
+        .reset-btn { background: var(--card-bg); border: 1px solid var(--border); border-radius: 30px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text); transition: all 0.3s; box-shadow: var(--shadow); }
+        .reset-btn:active { transform: scale(0.95); }
+        .reset-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+        .header-export-btn { background: var(--btn-primary); border: none; border-radius: 30px; padding: 8px 16px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: #fff; transition: all 0.3s; font-family: inherit; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
+        .header-export-btn:active { transform: scale(0.95); }
+        .header-export-btn:hover { background: var(--btn-primary-hover); }
+
         .status-badge { background: #10b981; color: #fff; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2); transition: all 0.3s ease; }
         .status-badge i { font-size: 10px; }
         .status-badge.offline { background: #ef4444; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2); }
@@ -123,12 +131,7 @@
         .meta-item .meta-value { font-size: 15px; font-weight: 600; color: var(--text); margin-top: 2px; }
         .meta-item.full-width { grid-column: 1 / -1; }
 
-        /* ===== এক্সপোর্ট অল বাটন ===== */
-        .export-section { display: none; justify-content: flex-end; margin-top: 12px; animation: fadeUp 0.4s ease; }
-        .export-section.active { display: flex; }
-        .export-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-family: inherit; box-shadow: var(--shadow); }
-        .export-btn:active { transform: scale(0.95); }
-        .export-btn:hover { border-color: var(--btn-primary); color: var(--btn-primary); }
+        /* ===== এক্সপোর্ট অল বাটন (হেডারে রাখা হয়েছে) ===== */
 
         /* ===== সার্চ ফিল্টার (এডভান্সড) ===== */
         .filter-section { display: none; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease; }
@@ -252,6 +255,12 @@
                 <h1>ভোটার তালিকা <small>Bangladesh Voter API</small></h1>
             </div>
             <div class="header-right">
+                <button class="header-export-btn" id="headerExportBtn" onclick="exportAllData()" title="সমস্ত ডেটা এক্সপোর্ট করুন">
+                    <i class="fas fa-file-export"></i> এক্সপোর্ট
+                </button>
+                <button class="reset-btn" onclick="resetEverything()" title="সব রিসেট করুন">
+                    <i class="fas fa-undo"></i>
+                </button>
                 <button class="accessibility-btn" onclick="toggleFontSize()" title="টেক্সট বড় করুন">
                     <i class="fas fa-text-height"></i> <span id="fontSizeLabel">A</span>
                 </button>
@@ -311,22 +320,15 @@
             <div class="meta-grid" id="metaGrid"></div>
         </div>
 
-        <!-- এক্সপোর্ট অল -->
-        <div class="export-section" id="exportSection">
-            <button class="export-btn" onclick="exportAllData()"><i class="fas fa-file-export"></i> সমস্ত ভোটার এক্সপোর্ট করুন (JSON)</button>
-        </div>
-
         <!-- সার্চ ফিল্টার (এডভান্সড) -->
         <div class="filter-section" id="filterSection">
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="সিরিয়াল, নাম, আইডি, পিতা, মাতা, জন্ম, পেশা, ঠিকানা দিয়ে খুঁজুন..." />
-                <!-- স্পিচ টু টেক্সট মাইক -->
+                <input type="text" id="searchInput" placeholder="সিরিয়াল, নাম, আইডি, পিতা, মাতা, জন্ম, পেশা, ঠিকানা, AND/OR/NOT দিয়ে খুঁজুন..." />
                 <button class="voice-search-btn" id="voiceBtn" onclick="startVoiceSearch()" title="ভয়েস দিয়ে সার্চ করুন">
                     <i class="fas fa-microphone"></i>
                 </button>
             </div>
-            <!-- অ্যাডভান্সড ফিল্টার ড্রপডাউন -->
             <select class="adv-filter-select" id="advFilter">
                 <option value="all">সকল (All)</option>
                 <option value="male">👨 পুরুষ</option>
@@ -426,7 +428,6 @@
         const toastMsg = document.getElementById('toastMsg');
         const toastText = document.getElementById('toastText');
         const breadcrumb = document.getElementById('breadcrumb');
-        const exportSection = document.getElementById('exportSection');
         const statsDashboard = document.getElementById('statsDashboard');
         const voiceBtn = document.getElementById('voiceBtn');
 
@@ -438,7 +439,8 @@
             currentSearchQuery: '',
             currentFilter: 'all',
             hierarchy: { division: null, district: null, upazila: null, union: null, village: null },
-            isLoadingMore: false
+            isLoadingMore: false,
+            currentGender: null
         };
 
         // ================================================================
@@ -468,6 +470,16 @@
             } else {
                 body.style.fontSize = (currentSize + 2) + 'px';
                 label.textContent = 'A+';
+            }
+        }
+
+        function resetEverything() {
+            if(confirm('সব সিলেকশন রিসেট করতে চান?')) {
+                resetToDivision();
+                searchInput.value = '';
+                advFilter.value = 'all';
+                state.currentSearchQuery = '';
+                applyFilters();
             }
         }
 
@@ -665,6 +677,7 @@
 
         async function loadVoterData(gender) {
             if (!state.currentVillageData || !gender) return;
+            state.currentGender = gender;
             try {
                 showLoading(true);
                 const response = await fetch(`${API_BASE}/population/${gender}/${state.currentVillageData.id}`);
@@ -672,14 +685,13 @@
                 const json = await response.json();
                 state.allVoters = json.data.voters || [];
                 state.filteredVoters = [...state.allVoters];
-                state.displayLimit = 500; // ৫০০টি কার্ড লোড হবে
+                state.displayLimit = 500;
                 state.currentSearchQuery = '';
                 state.currentFilter = 'all';
                 renderMeta(json.data.meta);
                 updateDashboard(json.data.meta);
                 renderVoterCards();
                 filterSection.style.display = 'flex';
-                exportSection.classList.add('active');
                 updateVoterCount(state.filteredVoters.length);
                 sentinel.style.display = 'flex';
                 statsDashboard.classList.add('active');
@@ -711,10 +723,20 @@
 
         function updateDashboard(meta) {
             if (!meta) return;
-            // মোট ভোটার JSON এর রিয়েল লেন্থ থেকে দেখাবে (আপনার JSON-এ ২৮০)
+            // মোট ভোটার JSON এর রিয়েল লেন্থ থেকে দেখাবে
             document.getElementById('statTotal').textContent = state.filteredVoters.length || 0; 
-            document.getElementById('statMale').textContent = meta.total_male_voters || 0;
-            document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
+            
+            // লজিক: পুরুষ ফাইলে মহিলা ০, মহিলা ফাইলে পুরুষ ০
+            if (state.currentGender === 'male') {
+                document.getElementById('statMale').textContent = state.filteredVoters.length || 0;
+                document.getElementById('statFemale').textContent = 0;
+            } else if (state.currentGender === 'female') {
+                document.getElementById('statMale').textContent = 0;
+                document.getElementById('statFemale').textContent = state.filteredVoters.length || 0;
+            } else {
+                document.getElementById('statMale').textContent = meta.total_male_voters || 0;
+                document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
+            }
             
             if (state.allVoters.length > 0) {
                 const occCount = {};
@@ -818,33 +840,65 @@
         }
 
         // ================================================================
-        //  সার্চ ও অ্যাডভান্সড ফিল্টার (আল্ট্রা প্রফেশনাল)
+        //  আল্ট্রা-প্রফেশনাল সার্চ ইঞ্জিন (Advanced Logic + AND/OR/NOT)
         // ================================================================
         function applyFilters() {
-            const query = searchInput.value.trim().toLowerCase();
+            const rawQuery = searchInput.value.trim();
             const filter = advFilter.value;
-            state.currentSearchQuery = query;
+            state.currentSearchQuery = rawQuery;
             state.currentFilter = filter;
 
             if (!state.allVoters.length) return;
             
             let filtered = [...state.allVoters];
 
-            // টেক্সট সার্চ (Serial সহ - এখন সিরিয়াল দিয়ে হুবহু খুঁজবে)
-            if (query !== '') {
-                filtered = filtered.filter(voter => {
-                    return (
-                        (voter.serial !== undefined && voter.serial !== null && String(voter.serial).toLowerCase().includes(query)) ||
-                        (voter.name && voter.name.toLowerCase().includes(query)) ||
-                        (voter.name_en && voter.name_en.toLowerCase().includes(query)) ||
-                        (voter.voter_id && voter.voter_id.toLowerCase().includes(query)) ||
-                        (voter.father && voter.father.toLowerCase().includes(query)) ||
-                        (voter.mother && voter.mother.toLowerCase().includes(query)) ||
-                        (voter.date_of_birth && voter.date_of_birth.toLowerCase().includes(query)) ||
-                        (voter.occupation && voter.occupation.toLowerCase().includes(query)) ||
-                        (voter.address && voter.address.toLowerCase().includes(query))
-                    );
-                });
+            // অ্যাডভান্সড টেক্সট সার্চ (AND, OR, NOT সাপোর্ট সহ)
+            if (rawQuery !== '') {
+                // লজিক্যাল অপারেটর পার্স করা
+                let query = rawQuery.toLowerCase();
+                
+                // NOT অপারেটর হ্যান্ডেল (যেমন: মোঃ NOT ইসমাইল)
+                if (query.includes(' not ')) {
+                    const parts = query.split(' not ');
+                    const includePart = parts[0].trim();
+                    const excludePart = parts[1].trim();
+                    filtered = filtered.filter(voter => {
+                        const fullText = `${voter.serial || ''} ${voter.name || ''} ${voter.name_en || ''} ${voter.voter_id || ''} ${voter.father || ''} ${voter.mother || ''} ${voter.date_of_birth || ''} ${voter.occupation || ''} ${voter.address || ''}`.toLowerCase();
+                        return fullText.includes(includePart) && !fullText.includes(excludePart);
+                    });
+                } 
+                // OR অপারেটর হ্যান্ডেল (যেমন: কৃষক OR ব্যবসা)
+                else if (query.includes(' or ')) {
+                    const parts = query.split(' or ').map(p => p.trim());
+                    filtered = filtered.filter(voter => {
+                        const fullText = `${voter.serial || ''} ${voter.name || ''} ${voter.name_en || ''} ${voter.voter_id || ''} ${voter.father || ''} ${voter.mother || ''} ${voter.date_of_birth || ''} ${voter.occupation || ''} ${voter.address || ''}`.toLowerCase();
+                        return parts.some(part => fullText.includes(part));
+                    });
+                }
+                // AND অপারেটর হ্যান্ডেল (যেমন: কৃষক AND জামালপুর)
+                else if (query.includes(' and ')) {
+                    const parts = query.split(' and ').map(p => p.trim());
+                    filtered = filtered.filter(voter => {
+                        const fullText = `${voter.serial || ''} ${voter.name || ''} ${voter.name_en || ''} ${voter.voter_id || ''} ${voter.father || ''} ${voter.mother || ''} ${voter.date_of_birth || ''} ${voter.occupation || ''} ${voter.address || ''}`.toLowerCase();
+                        return parts.every(part => fullText.includes(part));
+                    });
+                }
+                // সাধারণ সার্চ (সব ফিল্ডে খোঁজা)
+                else {
+                    filtered = filtered.filter(voter => {
+                        return (
+                            (voter.serial !== undefined && voter.serial !== null && String(voter.serial).toLowerCase().includes(query)) ||
+                            (voter.name && voter.name.toLowerCase().includes(query)) ||
+                            (voter.name_en && voter.name_en.toLowerCase().includes(query)) ||
+                            (voter.voter_id && voter.voter_id.toLowerCase().includes(query)) ||
+                            (voter.father && voter.father.toLowerCase().includes(query)) ||
+                            (voter.mother && voter.mother.toLowerCase().includes(query)) ||
+                            (voter.date_of_birth && voter.date_of_birth.toLowerCase().includes(query)) ||
+                            (voter.occupation && voter.occupation.toLowerCase().includes(query)) ||
+                            (voter.address && voter.address.toLowerCase().includes(query))
+                        );
+                    });
+                }
             }
 
             // অ্যাডভান্সড ফিল্টার
@@ -885,7 +939,6 @@
         function resetUI() {
             metaCard.classList.remove('active');
             filterSection.style.display = 'none';
-            exportSection.classList.remove('active');
             statsDashboard.classList.remove('active');
             voterGrid.innerHTML = '';
             state.allVoters = []; state.filteredVoters = []; state.currentSearchQuery = '';
