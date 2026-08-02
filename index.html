@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>বাংলাদেশ ভোটার তালিকা - প্রফেশনাল প্ল্যাটফর্ম</title>
     
-    <!-- প্রফেশনাল ফন্ট (Hind Siliguri + Inter + JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
@@ -190,7 +189,7 @@
         .voter-card .card-actions button:hover { border-color: var(--btn-primary); color: var(--btn-primary); background: rgba(59, 130, 246, 0.05); }
         .voter-card .card-actions button:hover i { transform: scale(1.1); }
         
-        /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল ===== */
+        /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল (৫০০ কার্ডের জন্য দরকার নেই, তবে রাখা হলো) ===== */
         .sentinel { height: 20px; width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
         .sentinel .loading-dots { font-size: 20px; color: var(--btn-primary); display: none; }
 
@@ -434,7 +433,7 @@
         let state = { 
             allVoters: [], 
             filteredVoters: [], 
-            displayLimit: 30, 
+            displayLimit: 500, // এখন একবারে ৫০০টি লোড হবে
             currentCardData: null,
             currentSearchQuery: '',
             currentFilter: 'all',
@@ -673,7 +672,7 @@
                 const json = await response.json();
                 state.allVoters = json.data.voters || [];
                 state.filteredVoters = [...state.allVoters];
-                state.displayLimit = 30;
+                state.displayLimit = 500; // ৫০০টি কার্ড লোড হবে
                 state.currentSearchQuery = '';
                 state.currentFilter = 'all';
                 renderMeta(json.data.meta);
@@ -713,11 +712,9 @@
         function updateDashboard(meta) {
             if (!meta) return;
             document.getElementById('statTotal').textContent = meta.total_voters || 0;
-            // মেটা থেকে পুরুষ ও মহিলা কাউন্ট নেওয়া (JSON ফাইলে থাকলে)
             document.getElementById('statMale').textContent = meta.total_male_voters || 0;
             document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
             
-            // টপ পেশা বের করা (যদি ডেটা থেকে বের করা যায়)
             if (state.allVoters.length > 0) {
                 const occCount = {};
                 state.allVoters.forEach(v => {
@@ -754,7 +751,9 @@
 
             let html = '';
             toShow.forEach((voter, index) => {
-                const serial = voter.serial || index + 1;
+                // JSON থেকে serial নিবে, না থাকলে খালি (—) রাখবে
+                const serial = (voter.serial !== undefined && voter.serial !== null && voter.serial !== '') ? voter.serial : '—';
+                
                 const nameHtml = highlightText(voter.name || '—', query);
                 const idHtml = highlightText(voter.voter_id || '—', query);
                 const fatherHtml = highlightText(voter.father || '—', query);
@@ -792,7 +791,7 @@
         function updateVoterCount(count) { voterCount.textContent = `মোট: ${count}`; }
 
         // ================================================================
-        //  ইনফিনিট স্ক্রোল
+        //  ইনফিনিট স্ক্রোল (যদি ৫০০ এর বেশি থাকে)
         // ================================================================
         let observer = null;
         function setupInfiniteScroll() {
@@ -803,7 +802,7 @@
                         state.isLoadingMore = true;
                         loadingDots.style.display = 'block';
                         setTimeout(() => {
-                            state.displayLimit += 30;
+                            state.displayLimit += 500; // আরও ৫০০ লোড হবে
                             renderVoterCards();
                             state.isLoadingMore = false;
                             loadingDots.style.display = 'none';
@@ -830,11 +829,11 @@
             
             let filtered = [...state.allVoters];
 
-            // টেক্সট সার্চ
+            // টেক্সট সার্চ (Serial সহ)
             if (query !== '') {
                 filtered = filtered.filter(voter => {
                     return (
-                        (voter.serial && String(voter.serial).toLowerCase().includes(query)) ||
+                        (voter.serial !== undefined && voter.serial !== null && String(voter.serial).toLowerCase().includes(query)) ||
                         (voter.name && voter.name.toLowerCase().includes(query)) ||
                         (voter.name_en && voter.name_en.toLowerCase().includes(query)) ||
                         (voter.voter_id && voter.voter_id.toLowerCase().includes(query)) ||
@@ -859,7 +858,7 @@
             }
 
             state.filteredVoters = filtered;
-            state.displayLimit = 30;
+            state.displayLimit = 500;
             renderVoterCards();
         }
 
@@ -1001,7 +1000,6 @@
                 case 'pdf': 
                 case 'png': 
                     closeModalById('downloadModal');
-                    // শুধুমাত্র নির্দিষ্ট কার্ডটি প্রিন্ট করার জন্য কাস্টম স্টাইল
                     const style = document.createElement('style');
                     style.innerHTML = `@media print { body * { visibility: hidden; } .voter-card { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; border: 2px solid #000 !important; } .voter-card * { visibility: visible; color: #000 !important; } .highlight { background-color: #fef08a !important; color: #000 !important; } }`;
                     document.head.appendChild(style);
@@ -1029,4 +1027,3 @@
     </script>
 </body>
 </html>
-
