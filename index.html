@@ -711,7 +711,8 @@
 
         function updateDashboard(meta) {
             if (!meta) return;
-            document.getElementById('statTotal').textContent = state.filteredVoters.length || 0; // JSON এর আসল লেন্থ
+            // মোট ভোটার JSON এর রিয়েল লেন্থ থেকে দেখাবে (আপনার JSON-এ ২৮০)
+            document.getElementById('statTotal').textContent = state.filteredVoters.length || 0; 
             document.getElementById('statMale').textContent = meta.total_male_voters || 0;
             document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
             
@@ -817,7 +818,7 @@
         }
 
         // ================================================================
-        //  সার্চ ও অ্যাডভান্সড ফিল্টার
+        //  সার্চ ও অ্যাডভান্সড ফিল্টার (আল্ট্রা প্রফেশনাল)
         // ================================================================
         function applyFilters() {
             const query = searchInput.value.trim().toLowerCase();
@@ -829,7 +830,7 @@
             
             let filtered = [...state.allVoters];
 
-            // টেক্সট সার্চ (Serial সহ)
+            // টেক্সট সার্চ (Serial সহ - এখন সিরিয়াল দিয়ে হুবহু খুঁজবে)
             if (query !== '') {
                 filtered = filtered.filter(voter => {
                     return (
