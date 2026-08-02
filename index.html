@@ -25,7 +25,6 @@
             padding: 20px;
         }
 
-        /* ===== কন্টেইনার ===== */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -36,7 +35,6 @@
             transition: all 0.3s ease;
         }
 
-        /* ===== হেডার ===== */
         .header {
             display: flex;
             align-items: center;
@@ -99,7 +97,6 @@
             color: #212529;
         }
 
-        /* ===== সিলেক্ট বক্স ===== */
         .selector-group {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -155,7 +152,6 @@
             cursor: not-allowed;
         }
 
-        /* ===== লোডিং স্পিনার ===== */
         .loading-spinner {
             display: none;
             text-align: center;
@@ -187,7 +183,6 @@
             font-size: 15px;
         }
 
-        /* ===== রেজাল্ট কার্ড ===== */
         .result-card {
             background: #f8f9fa;
             border-radius: 16px;
@@ -270,7 +265,50 @@
             color: #6c757d;
         }
 
-        /* ===== জনশন সেকশন ===== */
+        /* ===== জেন্ডার বাটন ===== */
+        .gender-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .gender-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Hind Siliguri', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .gender-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .gender-btn.male {
+            background: linear-gradient(135deg, #4dabf7, #1a7fba);
+        }
+
+        .gender-btn.female {
+            background: linear-gradient(135deg, #f06595, #c2255c);
+        }
+
+        .gender-btn i {
+            font-size: 18px;
+        }
+
         .population-section {
             margin-top: 20px;
             border-top: 2px dashed #dee2e6;
@@ -322,7 +360,6 @@
             color: #6c757d;
         }
 
-        /* ===== ফুটার ===== */
         .footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -354,7 +391,6 @@
             color: #212529;
         }
 
-        /* ===== রেসপনসিভ ===== */
         @media (max-width: 600px) {
             .container {
                 padding: 18px 16px;
@@ -440,6 +476,16 @@
             <h3 id="resultTitle"><i class="fas fa-list-ul"></i> <span id="resultTitleText">তালিকা</span></h3>
             <div class="data-grid" id="dataGrid"></div>
 
+            <!-- ===== জেন্ডার বাটন ===== -->
+            <div class="gender-buttons" id="genderButtons" style="display: none;">
+                <button class="gender-btn male" id="maleBtn">
+                    <i class="fas fa-mars"></i> পুরুষ (Male)
+                </button>
+                <button class="gender-btn female" id="femaleBtn">
+                    <i class="fas fa-venus"></i> মহিলা (Female)
+                </button>
+            </div>
+
             <!-- জনশন সেকশন -->
             <div class="population-section" id="populationSection">
                 <h4 style="margin-bottom: 16px; color: #1a2a3a;">
@@ -501,6 +547,11 @@
         const femaleAgeGroups = document.getElementById('femaleAgeGroups');
         const apiUrlDisplay = document.getElementById('apiUrlDisplay');
 
+        // জেন্ডার বাটন
+        const genderButtons = document.getElementById('genderButtons');
+        const maleBtn = document.getElementById('maleBtn');
+        const femaleBtn = document.getElementById('femaleBtn');
+
         // ================================================================
         //  স্টেট
         // ================================================================
@@ -516,7 +567,8 @@
                 upazila: null,
                 union: null,
                 village: null
-            }
+            },
+            currentVillageData: null // গ্রামের সম্পূর্ণ ডেটা সংরক্ষণ
         };
 
         // ================================================================
@@ -605,6 +657,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 return;
             }
             try {
@@ -617,6 +670,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 apiUrlDisplay.textContent = `API: /divisions/${divisionId}`;
             } catch (err) {
                 alert('জেলা লোড করতে সমস্যা হয়েছে');
@@ -632,6 +686,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 return;
             }
             try {
@@ -643,6 +698,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 apiUrlDisplay.textContent = `API: /districts/${districtId}`;
             } catch (err) {
                 alert('উপজেলা লোড করতে সমস্যা হয়েছে');
@@ -657,6 +713,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 return;
             }
             try {
@@ -667,6 +724,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 apiUrlDisplay.textContent = `API: /upazilas/${upazilaId}`;
             } catch (err) {
                 alert('ইউনিয়ন লোড করতে সমস্যা হয়েছে');
@@ -680,6 +738,7 @@
                 clearSelect(villageSelect, 'প্রথমে ইউনিয়ন সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 return;
             }
             try {
@@ -689,6 +748,7 @@
                 populateSelect(villageSelect, state.villages, 'গ্রাম সিলেক্ট করুন');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 apiUrlDisplay.textContent = `API: /unions/${unionId}`;
             } catch (err) {
                 alert('গ্রাম লোড করতে সমস্যা হয়েছে');
@@ -701,17 +761,20 @@
             if (!villageId) {
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
                 return;
             }
             try {
                 showLoading(true);
                 const data = await apiFetch(`/villages/${villageId}`);
+                state.currentVillageData = data; // সংরক্ষণ
                 renderVillageResult(data);
                 apiUrlDisplay.textContent = `API: /villages/${villageId}`;
             } catch (err) {
                 alert('গ্রামের তথ্য লোড করতে সমস্যা হয়েছে');
                 showResult(false);
                 showPopulation(false);
+                genderButtons.style.display = 'none';
             } finally {
                 showLoading(false);
             }
@@ -787,12 +850,49 @@
                         </div>
                     </div>
                 `;
+
+                // জেন্ডার বাটন দেখাও
+                genderButtons.style.display = 'flex';
             } else {
                 showPopulation(false);
+                genderButtons.style.display = 'none';
             }
 
             dataGrid.innerHTML = html;
         }
+
+        // ================================================================
+        //  জেন্ডার বাটনের ইভেন্ট – ফাইল ওপেন করা
+        // ================================================================
+        maleBtn.addEventListener('click', function() {
+            if (!state.currentVillageData) {
+                alert('প্রথমে একটি গ্রাম সিলেক্ট করুন!');
+                return;
+            }
+            // male ফাইলের পাথ নিন
+            const filePath = state.currentVillageData.male;
+            if (!filePath) {
+                alert('এই গ্রামের জন্য পুরুষের ফাইল পাওয়া যায়নি!');
+                return;
+            }
+            // ফাইল ওপেন করুন (যেকোনো ফরম্যাট)
+            window.open(filePath, '_blank');
+        });
+
+        femaleBtn.addEventListener('click', function() {
+            if (!state.currentVillageData) {
+                alert('প্রথমে একটি গ্রাম সিলেক্ট করুন!');
+                return;
+            }
+            // female ফাইলের পাথ নিন
+            const filePath = state.currentVillageData.female;
+            if (!filePath) {
+                alert('এই গ্রামের জন্য মহিলার ফাইল পাওয়া যায়নি!');
+                return;
+            }
+            // ফাইল ওপেন করুন (যেকোনো ফরম্যাট)
+            window.open(filePath, '_blank');
+        });
 
         // ================================================================
         //  ইভেন্ট হ্যান্ডলার
@@ -801,7 +901,6 @@
             const val = getSelectedValue(this);
             state.selected.division = val;
             loadDistricts(val);
-            // রিসেট
             districtSelect.value = '';
             upazilaSelect.value = '';
             unionSelect.value = '';
@@ -843,66 +942,9 @@
         // ================================================================
         loadDivisions();
 
-
-
-
-
-
-
-
-
-
-
-
-        // গ্রাম সিলেক্ট করলে
-const loadVillage = async (villageId) => {
-    setLoading(true);
-    try {
-        const response = await fetch(`/api/villages/${villageId}`);
-        const result = await response.json();
-        
-        if (result.success) {
-            const village = result.data;
-            
-            // গ্রামের মৌলিক তথ্য
-            console.log('গ্রামের নাম:', village.name);
-            console.log('বাংলা নাম:', village.bn_name);
-            console.log('মোট জনসংখ্যা:', village.population);
-            console.log('পরিবার:', village.statistics.households);
-            
-            // পুরুষ জনশন
-            if (village.population_data.male) {
-                console.log('পুরুষ总数:', village.population_data.male.population.total);
-                console.log('পুরুষের বয়সভিত্তিক:', village.population_data.male.population.age_groups);
-            }
-            
-            // মহিলা জনশন
-            if (village.population_data.female) {
-                console.log('মহিলা总数:', village.population_data.female.population.total);
-                console.log('মহিলার বয়সভিত্তিক:', village.population_data.female.population.age_groups);
-            }
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-    setLoading(false);
-};
-
-
-
-        
-
-
-
-
-
-
-        
-
         console.log('🇧🇩 বাংলাদেশ লোকেশন API ডেমো লোড হয়েছে!');
         console.log(`🔗 API বেস URL: ${API_BASE}`);
     </script>
 
 </body>
 </html>
-
