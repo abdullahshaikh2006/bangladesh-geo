@@ -14,7 +14,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
+            background: #f0f4f8;
             min-height: 100vh;
             padding: 20px;
         }
@@ -207,7 +207,7 @@
 </div>
 
 <script>
-    // 🔥 আপনার সার্ভারের সঠিক লিংক
+    // 🔥 আপনার রেন্ডার সার্ভারের সঠিক লিংক
     const API_BASE = 'https://bangladesh-api-cl87.onrender.com/api';
 
     // DOM এলিমেন্ট
@@ -360,7 +360,7 @@
         if (!gender || !state.fileUrls[gender]) return;
 
         showLoader(true);
-        // সার্ভার থেকে সরাসরি JSON ফাইল লোড হবে
+        // 🔥 সার্ভার থেকে সরাসরি JSON ফাইল লোড হবে (আপনার এক্সাক্ট পাথে)
         const data = await apiFetch(state.fileUrls[gender]);
         showLoader(false);
 
@@ -445,4 +445,5 @@
     loadDivisions();
 </script>
 </body>
-</html>
+            </html>
+            
