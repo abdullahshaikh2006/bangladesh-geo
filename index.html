@@ -189,7 +189,7 @@
         .voter-card .card-actions button:hover { border-color: var(--btn-primary); color: var(--btn-primary); background: rgba(59, 130, 246, 0.05); }
         .voter-card .card-actions button:hover i { transform: scale(1.1); }
         
-        /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল (৫০০ কার্ডের জন্য দরকার নেই, তবে রাখা হলো) ===== */
+        /* ===== ইনফিনিট স্ক্রোল সেন্টিনেল ===== */
         .sentinel { height: 20px; width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
         .sentinel .loading-dots { font-size: 20px; color: var(--btn-primary); display: none; }
 
@@ -433,7 +433,7 @@
         let state = { 
             allVoters: [], 
             filteredVoters: [], 
-            displayLimit: 500, // এখন একবারে ৫০০টি লোড হবে
+            displayLimit: 500, // একবারে ৫০০টি লোড হবে
             currentCardData: null,
             currentSearchQuery: '',
             currentFilter: 'all',
@@ -711,7 +711,7 @@
 
         function updateDashboard(meta) {
             if (!meta) return;
-            document.getElementById('statTotal').textContent = meta.total_voters || 0;
+            document.getElementById('statTotal').textContent = state.filteredVoters.length || 0; // JSON এর আসল লেন্থ
             document.getElementById('statMale').textContent = meta.total_male_voters || 0;
             document.getElementById('statFemale').textContent = (meta.total_voters - meta.total_male_voters) || 0;
             
@@ -791,7 +791,7 @@
         function updateVoterCount(count) { voterCount.textContent = `মোট: ${count}`; }
 
         // ================================================================
-        //  ইনফিনিট স্ক্রোল (যদি ৫০০ এর বেশি থাকে)
+        //  ইনফিনিট স্ক্রোল
         // ================================================================
         let observer = null;
         function setupInfiniteScroll() {
@@ -802,7 +802,7 @@
                         state.isLoadingMore = true;
                         loadingDots.style.display = 'block';
                         setTimeout(() => {
-                            state.displayLimit += 500; // আরও ৫০০ লোড হবে
+                            state.displayLimit += 500;
                             renderVoterCards();
                             state.isLoadingMore = false;
                             loadingDots.style.display = 'none';
