@@ -252,7 +252,10 @@
         <div class="header">
             <div class="header-left">
                 <span class="flag">🇧🇩</span>
-                <h1>ভোটার তালিকা <small>Bangladesh Voter API</small></h1>
+                <h1>ভোটার তালিকা</h1>
+                <div class="status-badge" id="statusBadge">
+                    <i class="fas fa-circle"></i> <span id="statusText">সংযোগ হচ্ছে...</span>
+                </div>
             </div>
             <div class="header-right">
                 <button class="header-export-btn" id="headerExportBtn" onclick="exportAllData()" title="সমস্ত ডেটা এক্সপোর্ট করুন">
@@ -267,9 +270,6 @@
                 <button class="theme-toggle" onclick="toggleTheme()" title="ডার্ক/লাইট মোড">
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
-                <div class="status-badge" id="statusBadge">
-                    <i class="fas fa-circle"></i> <span id="statusText">সংযোগ হচ্ছে...</span>
-                </div>
             </div>
         </div>
 
